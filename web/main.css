@@ -1,0 +1,84 @@
+body {
+    background-color: #1e272e;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+.container {
+    background-color: #485460;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+    max-width: 400px;
+    border-radius: 0.5em;
+    text-align: left;
+}
+
+.precheck {
+    display: block;
+}
+
+.title {
+    text-align: center;
+}
+
+.content {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dropdown {
+    position: relative;
+    margin-right: 0;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+    text-align: left;
+}
+
+.checkmark {
+    text-align: right;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.download {
+    background-color: #0be881;
+    text-align: center;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+.copy
+{
+    text-align: center;
+    display: block;
+    color: black;
+    cursor: pointer;
+}
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .button {background-color: #606e7b;}
