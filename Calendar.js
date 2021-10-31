@@ -1,23 +1,22 @@
-var ICAL = require('ical.js');
-var CryptoJS = require("crypto-js");
-var base32 = require('hi-base32');
-var fs = require("fs");
+const ICAL = require('ical.js');
+const CryptoJS = require("crypto-js");
+const base32 = require('hi-base32');
+const fs = require("fs");
 const https = require('https');
-
-var comp = new ICAL.Component();
-var group, fo, de, zode, ex, la, etc, loc, ma, fy, ke;
+let comp = new ICAL.Component();
+let group, fo, de, zode, ex, la, etc, loc, ma, fy, ke;
 
 module.exports.decodeURL = decodeURL;
 module.exports.encodeURL = encodeURL;
 
 function decodeURL(url) {
     if (url.includes("TB_Schema-") && url.includes(".ics")) {
-        var encoded = url.substring(url.indexOf("TB_Schema-") + 10, url.indexOf(".ics"))
-        var decoded = base32.decode(encoded);
-        var decrypted = CryptoJS.AES.decrypt(decoded, "13MONKELOVESBANANA37");
-        var infosplit = decrypted.toString(CryptoJS.enc.Utf8).split(' ');
+        const encoded = url.substring(url.indexOf("TB_Schema-") + 10, url.indexOf(".ics"))
+        const decoded = base32.decode(encoded);
+        const decrypted = CryptoJS.AES.decrypt(decoded, "13MONKELOVESBANANA37");
+        const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split(' ');
         group = infosplit[0];
-        var info = infosplit[1].split('')
+        const info = infosplit[1].split('')
         if (info.length === 14) {
             fo = numToBool(info[0]);
             de = numToBool(info[1]);
@@ -76,9 +75,9 @@ Fy: Physics classes                                 DONE
 Ke: Chemistry classes                               DONE
 */
 function encodeURL(data = []) { //VER:1
-    var uncodeUrl = data[0] + " " + strToBit(data[1]) + strToBit(data[2]) + strToBit(data[3]) + strToBit(data[4]) + strToBit(data[5]) + strToBit(data[6]) + strToBit(data[7]) + strToBit(data[8]) + strToBit(data[9]) + strToBit(data[10]) + "0001";
-    var re = CryptoJS.AES.encrypt(uncodeUrl, "13MONKELOVESBANANA37");
-    var ree = base32.encode(re.toString());
+    const uncodeUrl = data[0] + " " + strToBit(data[1]) + strToBit(data[2]) + strToBit(data[3]) + strToBit(data[4]) + strToBit(data[5]) + strToBit(data[6]) + strToBit(data[7]) + strToBit(data[8]) + strToBit(data[9]) + strToBit(data[10]) + "0001";
+    const re = CryptoJS.AES.encrypt(uncodeUrl, "13MONKELOVESBANANA37");
+    const ree = base32.encode(re.toString());
     return "TB_Schema-" + ree + ".ics";
 }
 function iCal(){
@@ -97,9 +96,9 @@ function iCal(){
             })
         }
     });
-    var text = fs.readFileSync("./TimeEdit.ics", 'UTF-8');
+    const text = fs.readFileSync("./TimeEdit.ics", 'UTF-8');
         // Get the basic data out
-        var jCalData = ICAL.parse(text);
+        const jCalData = ICAL.parse(text);
         comp = new ICAL.Component(jCalData);
 }
 
@@ -310,7 +309,7 @@ function getKes(){
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('summary') != null) {
-            var desc = vevent.getFirstProperty('summary').getFirstValue();
+            const desc = vevent.getFirstProperty('summary').getFirstValue();
             if (desc.includes('Kemi')) {
                 col.push(vevent);
             }
@@ -322,14 +321,30 @@ function getKes(){
 }
 
 function addFosLoc() {
-        comp.getAllSubcomponents('vevent').forEach(vevent => {
+    comp.getAllSubcomponents('vevent').forEach(vevent => {
 
-            if (vevent.getFirstProperty('description') != null) {
-                var desc = vevent.getFirstProperty('description').getFirstValue();
-                if (desc.includes('Videoföreläsning')) {
-                    vevent.getFirstProperty('location').setValue('Inspelad på Canvas');
-                }
-
+        if (vevent.getFirstProperty('description') != null) {
+            const desc = vevent.getFirstProperty('description').getFirstValue();
+            if (desc.includes('Videoföreläsning')) {
+                vevent.getFirstProperty('location').setValue('Inspelad på Canvas');
             }
-        });
+            if (desc.includes('Distans i Zoom')) {
+                vevent.getFirstProperty('location').setValue('Zoom');
+            }
+        }
+        if (vevent.getFirstProperty('location') != null) {
+            const desc = vevent.getFirstProperty('location').getFirstValue();
+            if (desc.includes('Styrbord') || desc.includes('Babord') || desc.includes('Svea') || desc.includes('Jupiter') || desc.includes('Saga')) {
+                vevent.getFirstProperty('location').setValue('Lindholmen | ' + desc);
+            }
+            if (desc.includes('KB') || desc.includes('SB') || desc.includes('FL') || desc.includes('EL') ||
+                desc.includes('HB') || desc.includes('KE') || desc.includes('KS') || desc.includes('HC') ||
+                desc.includes('ML')) {
+                vevent.getFirstProperty('location').setValue('Johanneberg | ' + desc);
+            }
+        }
+    });
 }
+//Debug stuff
+//console.log(encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "true", "true", "true"]));
+console.log(decodeURL('TB_Schema-KUZEM43EI5LGWWBRFNDEIQKPOZHE66CRGZEXS5TTGRUXMSKQKRWVKOJQJRKHOVKPNF4UGSTBHBWGWSSGGRNEKTSUNJYG4NJYNZDTKNQ=.ics').toString())
