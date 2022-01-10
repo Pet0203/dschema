@@ -94,10 +94,10 @@ function buildForGroup(group) {
             if (desc.match(/[0-9]--[0-9]+/) !== null) {
                 //Build interval
                 const groupComponent = desc.match(/[0-9]--[0-9]+/)[0];
-                const firstGroup = groupComponent.substring(0, groupComponent.indexOf('--'));
-                const lastGroup = groupComponent.substring(groupComponent.indexOf('--') + 2);
+                const firstGroup = parseInt(groupComponent.substring(0, groupComponent.indexOf('--')));
+                const lastGroup = parseInt(groupComponent.substring(groupComponent.indexOf('--') + 2));
                 //Get group number
-                const groupNum = group.substring(8)
+                const groupNum = parseInt(group.substring(8))
                 //Remove if outside of interval
                 if (firstGroup > groupNum || lastGroup < groupNum)
                     comp.removeSubcomponent(vevent);
@@ -215,6 +215,6 @@ function modLoc() {
     });
 }
 //Debug stuff
-const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "true"]);
+const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "false"]);
 console.log(encode);
 console.log(decodeURL(encode).toString());
