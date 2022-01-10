@@ -2,9 +2,8 @@ const ICAL = require('ical.js');
 const CryptoJS = require("crypto-js");
 const base32 = require('hi-base32');
 const fs = require("fs");
-const https = require('https');
 let comp = new ICAL.Component();
-let group, fo, de, zode, ex, la, etc, loc, ma, fy, ke;
+let group, etc, loc, ma, fy, pfy, pke;
 
 module.exports.decodeURL = decodeURL;
 module.exports.encodeURL = encodeURL;
@@ -17,19 +16,16 @@ function decodeURL(url) {
         const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split(' ');
         group = infosplit[0];
         const info = infosplit[1].split('')
-        if (info.length === 14) {
-            fo = numToBool(info[0]);
-            de = numToBool(info[1]);
-            zode = numToBool(info[2]);
-            ex = numToBool(info[3]);
-            la = numToBool(info[4]);
-            etc = numToBool(info[5]);
-            loc = numToBool(info[6]);
-            ma = numToBool(info[7]);
-            fy = numToBool(info[8]);
-            ke = numToBool(info[9]);
-            var ver = ""+ info[10]+ info[11]+ info[12]+ info[13]
-        }
+        if (info.length === 10) {
+            etc = numToBool(info[0]);
+            loc = numToBool(info[1]);
+            ma = numToBool(info[2]);
+            fy = numToBool(info[3]);
+            pfy = numToBool(info[4])
+            pke = numToBool(info[5]);
+            var ver = ""+ info[6]+ info[7]+ info[8]+ info[9]
+        } else
+            return false;
     iCal();
     buildForGroup(group);
         return build().toString();
@@ -47,59 +43,39 @@ function build(){
         rebuild()
         return comp;
     }
-    if(!fo) {getFos(comp).forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!de) {getDes(comp).forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!zode) {getZodes(comp).forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!ex) {getExs(comp).forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!la) {getLas(comp).forEach(obj => {comp.removeSubcomponent(obj)});}
     if(!ma) {getMas().forEach(obj => {comp.removeSubcomponent(obj)});}
     if(!fy) {getFys().forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!ke) {getKes().forEach(obj => {comp.removeSubcomponent(obj)});}
+    if(!pfy) {getPFys().forEach(obj => {comp.removeSubcomponent(obj)});}
+    if(!pke) {getPKes().forEach(obj => {comp.removeSubcomponent(obj)});}
 
-    if(loc && fo)
-        addFosLoc();
+    if(loc)
+        modLoc();
     return comp;
 }
 
 /* Var Table:
 Group: Undergroup in ZBASS-1.X format               DONE
-Fo: Föreläsning                                     DONE
-De: Demonstration                                   DONE
-Zode: Zoom-demonstration                            DONE
-Ex: Övning                                          DONE
-La: Laboration                                      DONE
 Etc: Övrig                                          DONE
 Loc: Whether we need changing of location or not    DONE
 Ma: Math classes                                    DONE
 Fy: Physics classes                                 DONE
-Ke: Chemistry classes                               DONE
+PFy: Physics-project classes                        DONE
+PKe: Chemistry-project classes                      DONE
 */
-function encodeURL(data = []) { //VER:1
-    const uncodeUrl = data[0] + " " + strToBit(data[1]) + strToBit(data[2]) + strToBit(data[3]) + strToBit(data[4]) + strToBit(data[5]) + strToBit(data[6]) + strToBit(data[7]) + strToBit(data[8]) + strToBit(data[9]) + strToBit(data[10]) + "0001";
+function encodeURL(data = []) { //VER:2
+    let uncodeUrl = data[0] + " ";
+    for (i = 1; i < data.length; i++)
+            uncodeUrl = uncodeUrl + strToBit(data[i])
+    uncodeUrl = uncodeUrl + '0002';
     const re = CryptoJS.AES.encrypt(uncodeUrl, "13MONKELOVESBANANA37");
     const ree = base32.encode(re.toString());
     return "TB_Schema-" + ree + ".ics";
 }
-function iCal(){
-    fs.stat('./TimeEdit.ics', (err, stats) => {
-        if (stats.mtime.getDate() !== new Date().getDate() || stats.mtime.getMonth() !== new Date().getMonth()) {
-            const url = 'https://cloud.timeedit.net/chalmers/web/public/ri6YZ051Z35Z6gQ2Y65005005645y4Y0nQ68X76Qg77650Q03.ics';
-
-            https.get(url,(res) => {
-                // Image will be stored at this path
-                const path = `./TimeEdit.ics`;
-                const filePath = fs.createWriteStream(path);
-                res.pipe(filePath);
-                filePath.on('finish',() => {
-                    filePath.close();
-                })
-            })
-        }
-    });
+function iCal() {
     const text = fs.readFileSync("./TimeEdit.ics", 'UTF-8');
-        // Get the basic data out
-        const jCalData = ICAL.parse(text);
-        comp = new ICAL.Component(jCalData);
+    // Get the basic data out
+    const jCalData = ICAL.parse(text);
+    comp = new ICAL.Component(jCalData);
 }
 
 function strToBit(str){
@@ -108,54 +84,24 @@ function strToBit(str){
     return 0;
 }
 
-//Check if in SGrp group
-function isInSGrp(SGrp, group) {
-    switch(SGrp) {
-        case 'A':
-            if (group === "ZBASS-1.1" || group === "ZBASS-1.2" || group === "ZBASS-1.3")
-                return true;
-            break;
-        case 'B':
-            if (group === "ZBASS-1.4" || group === "ZBASS-1.5" || group === "ZBASS-1.6")
-                return true;
-            break;
-        case 'C':
-            if (group === "ZBASS-1.7" || group === "ZBASS-1.8" || group === "ZBASS-1.9")
-                return true;
-            break;
-        case 'D':
-            if (group === "ZBASS-1.10" || group === "ZBASS-1.11" || group === "ZBASS-1.12")
-                return true;
-            break;
-        default:
-            return false;
-    }
-    return false;
-}
-
-//Handles Group, and part of Loc
+//Handles Group
 function buildForGroup(group) {
     comp.getAllSubcomponents('vevent').forEach(vevent => {
         if (vevent.getFirstProperty('description') != null) {
             var desc = vevent.getFirstProperty('description').getFirstValue();
             if (desc.includes('ZBASS-1.')) {
-                if (desc.includes(group) && desc.charAt(desc.indexOf(group) + group.length) !== '0'
-                    && desc.charAt(desc.indexOf(group) + group.length) !== '1'
-                    && desc.charAt(desc.indexOf(group) + group.length) !== '2') {
-                } else {
-                    if (desc.includes('(SGrp ')) {
-                        var start = desc.indexOf('(SGrp ');
-                        var groups = desc.substring(start + 6, desc.indexOf('i  Zoom)', start))
-                        var formattedGroups = groups.replace(',/g', '').replace(' /g', '').replace('\n/g', '').split('');
-                        var zoom = false;
-                        formattedGroups.forEach(sgrp => {
-                            if (isInSGrp(sgrp, group))
-                                zoom = true;
-                        });
-                        if (zoom) {
-                            if (loc)
-                                vevent.getFirstProperty('location').setValue('Zoom');
-                        } else
+                //Do nothing if contains group and no 0 after in case of ZBASS-1.10 instead of ZBASS1.1
+                //Further sorting needed for ex. "grupp 1--5" events
+                if (!desc.includes(group) || desc.charAt(desc.indexOf(group) + group.length) === '0') {
+                    if (desc.match(/[0-9]--[0-9]/) !== null) {
+                        //Build interval
+                        const groupComponent = desc.match(/[0-9]--[0-9]/);
+                        const firstGroup = groupComponent.substring(0, groupComponent.indexOf('--'));
+                        const lastGroup = groupComponent.substring(groupComponent.indexOf('--') + 2);
+                        //Get group number
+                        const groupNum = group.substring(8)
+                        //Remove if outside of interval
+                        if (firstGroup > groupNum || lastGroup < groupNum)
                             comp.removeSubcomponent(vevent);
                     } else {
                         comp.removeSubcomponent(vevent);
@@ -166,91 +112,8 @@ function buildForGroup(group) {
     });
 }
 
-function getFos(reComp){
-    var col = [];
-    reComp.getAllSubcomponents('vevent').forEach(vevent => {
 
-        if (vevent.getFirstProperty('description') != null) {
-            var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Videoföreläsning')) {
-                col.push(vevent);
-            }
 
-        }
-    });
-    return col;
-}
-
-function getDes(reComp){
-    var col = [];
-    reComp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('description') != null) {
-            var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Demonstration')) {
-                if (vevent.getFirstProperty('location') != null) {
-                    var desc = vevent.getFirstProperty('location').getFirstValue();
-                    if (desc.includes('Zoom')) {
-                        return;
-                    }
-                }
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-}
-
-function getZodes(reComp){
-    var col = [];
-    reComp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('description') != null) {
-            var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Demonstration')) {
-                if (vevent.getFirstProperty('location') != null) {
-                    var desc = vevent.getFirstProperty('location').getFirstValue();
-                    if (desc.includes('Zoom')) {
-                        col.push(vevent);
-                    }
-                }
-            }
-
-        }
-    })
-    return col;
-}
-
-function getExs(reComp){
-    var col = [];
-    reComp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('description') != null) {
-            var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Exercise')) {
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-}
-
-function getLas(reComp){
-    var col = [];
-    reComp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('description') != null) {
-            var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Laboration')) {
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-}
 
 //If etc is false we need to rebuild the calendar
 function rebuild(){
@@ -260,18 +123,14 @@ function rebuild(){
 
     if(ma) {getMas().forEach(obj => {newComp.addSubcomponent(obj)});}
     if(fy) {getFys().forEach(obj => {newComp.addSubcomponent(obj)});}
-    if(ke) {getKes().forEach(obj => {newComp.addSubcomponent(obj)});}
+    if(pfy) {getPKes().forEach(obj => {newComp.addSubcomponent(obj)});}
+    if(pke) {getPKes().forEach(obj => {newComp.addSubcomponent(obj)});}
 
-    if(!fo) {getFos(newComp).forEach(obj => {newComp.removeSubcomponent(obj)});}
-    if(!de) {getDes(newComp).forEach(obj => {newComp.removeSubcomponent(obj)});}
-    if(!zode) {getZodes(newComp).forEach(obj => {newComp.removeSubcomponent(obj)});}
-    if(!ex) {getExs(newComp).forEach(obj => {newComp.removeSubcomponent(obj)});}
-    if(!la) {getLas(newComp).forEach(obj => {newComp.removeSubcomponent(obj)});}
 
     comp = newComp;
 
-    if(loc && fo)
-        addFosLoc();
+    if(loc)
+        modLoc();
 }
 
 function getMas(){
@@ -280,7 +139,7 @@ function getMas(){
 
         if (vevent.getFirstProperty('summary') != null) {
             var desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('Matematik')) {
+            if (desc.includes('MVE426')) {
                 col.push(vevent);
             }
 
@@ -295,7 +154,7 @@ function getFys(){
 
         if (vevent.getFirstProperty('summary') != null) {
             var desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('Fysik')) {
+            if (desc.includes('LMA538')) {
                 col.push(vevent);
             }
 
@@ -304,13 +163,28 @@ function getFys(){
     return col;
 }
 
-function getKes(){
+function getPFys(){
+    var col = [];
+    comp.getAllSubcomponents('vevent').forEach(vevent => {
+
+        if (vevent.getFirstProperty('summary') != null) {
+            var desc = vevent.getFirstProperty('summary').getFirstValue();
+            if (desc.includes('MVE285')) {
+                col.push(vevent);
+            }
+
+        }
+    })
+    return col;
+}
+
+function getPKes(){
     var col = [];
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('summary') != null) {
             const desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('Kemi')) {
+            if (desc.includes('KBT185')) {
                 col.push(vevent);
             }
 
@@ -320,15 +194,15 @@ function getKes(){
 
 }
 
-function addFosLoc() {
+function modLoc() {
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('description') != null) {
             const desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Videoföreläsning')) {
+            if (desc.includes('Film-föreläsning')) {
                 vevent.getFirstProperty('location').setValue('Inspelad på Canvas');
             }
-            if (desc.includes('Distans i Zoom')) {
+            if (desc.includes('Zoom')) {
                 vevent.getFirstProperty('location').setValue('Zoom');
             }
         }
@@ -346,5 +220,6 @@ function addFosLoc() {
     });
 }
 //Debug stuff
-//console.log(encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "true", "true", "true"]));
-console.log(decodeURL('TB_Schema-KUZEM43EI5LGWWBRFNDEIQKPOZHE66CRGZEXS5TTGRUXMSKQKRWVKOJQJRKHOVKPNF4UGSTBHBWGWSSGGRNEKTSUNJYG4NJYNZDTKNQ=.ics').toString())
+const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "true"]);
+console.log(encode);
+console.log(decodeURL(encode).toString());

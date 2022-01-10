@@ -2,6 +2,35 @@ var express = require('express');
 var app = express();
 path = require('path');
 var cal = require('./Calendar');
+const fs = require("fs");
+const https = require('https');
+
+function downloadiCal() {
+    try {
+        fs.truncate('./TimeEdit.ics', 0, function () {
+        })
+    } catch (e) {}
+    https.get('https://cloud.timeedit.net/chalmers/web/public/ri6YZ060Z55Z6gQ2Y65705005641y4Y0nQ68X06Qg77660Q05.ics', (res) => {
+
+        // Open file in local filesystem
+        const file = fs.createWriteStream(`TimeEdit.ics`);
+
+        // Write data into local file
+        res.pipe(file);
+
+        // Close the file
+        file.on('finish', () => {
+            file.close();
+            console.log(`File downloaded!`);
+        });
+
+    }).on("error", (err) => {
+        console.log("Error: ", err.message);
+    });
+    setTimeout(downloadiCal, 6*3600);
+}
+
+downloadiCal()
 
 app.get('/', function(req, res){
     res.sendFile(path.join(__dirname, 'web/index.html'));
