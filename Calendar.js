@@ -23,7 +23,7 @@ function decodeURL(url) {
             fy = numToBool(info[3]);
             pfy = numToBool(info[4])
             pke = numToBool(info[5]);
-            var ver = ""+ info[6]+ info[7]+ info[8]+ info[9]
+            //var ver = ""+ info[6]+ info[7]+ info[8]+ info[9] Unused
         } else
             return false;
     iCal();
@@ -89,24 +89,18 @@ function buildForGroup(group) {
     comp.getAllSubcomponents('vevent').forEach(vevent => {
         if (vevent.getFirstProperty('description') != null) {
             var desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('ZBASS-1.')) {
-                //Do nothing if contains group and no 0 after in case of ZBASS-1.10 instead of ZBASS1.1
-                //Further sorting needed for ex. "grupp 1--5" events
-                if (!desc.includes(group) || desc.charAt(desc.indexOf(group) + group.length) === '0') {
-                    if (desc.match(/[0-9]--[0-9]/) !== null) {
-                        //Build interval
-                        const groupComponent = desc.match(/[0-9]--[0-9]/);
-                        const firstGroup = groupComponent.substring(0, groupComponent.indexOf('--'));
-                        const lastGroup = groupComponent.substring(groupComponent.indexOf('--') + 2);
-                        //Get group number
-                        const groupNum = group.substring(8)
-                        //Remove if outside of interval
-                        if (firstGroup > groupNum || lastGroup < groupNum)
-                            comp.removeSubcomponent(vevent);
-                    } else {
-                        comp.removeSubcomponent(vevent);
-                    }
-                }
+            if (desc.includes('ZBASS-1.') && (!desc.includes(group) || desc.charAt(desc.indexOf(group) + group.length) === '0'))
+                comp.removeSubcomponent(vevent);
+            if (desc.match(/[0-9]--[0-9]+/) !== null) {
+                //Build interval
+                const groupComponent = desc.match(/[0-9]--[0-9]+/)[0];
+                const firstGroup = groupComponent.substring(0, groupComponent.indexOf('--'));
+                const lastGroup = groupComponent.substring(groupComponent.indexOf('--') + 2);
+                //Get group number
+                const groupNum = group.substring(8)
+                //Remove if outside of interval
+                if (firstGroup > groupNum || lastGroup < groupNum)
+                    comp.removeSubcomponent(vevent);
             }
         }
     });
@@ -208,12 +202,13 @@ function modLoc() {
         }
         if (vevent.getFirstProperty('location') != null) {
             const desc = vevent.getFirstProperty('location').getFirstValue();
-            if (desc.includes('Styrbord') || desc.includes('Babord') || desc.includes('Svea') || desc.includes('Jupiter') || desc.includes('Saga')) {
+            if (desc.includes('Styrbord') || desc.includes('Babord') || desc.includes('Svea') || desc.includes('Jupiter') ||
+                desc.includes('Saga') || desc.includes('Bryggan') || desc.includes('Gnistan') || desc.includes('Delta')) {
                 vevent.getFirstProperty('location').setValue('Lindholmen | ' + desc);
             }
             if (desc.includes('KB') || desc.includes('SB') || desc.includes('FL') || desc.includes('EL') ||
                 desc.includes('HB') || desc.includes('KE') || desc.includes('KS') || desc.includes('HC') ||
-                desc.includes('ML')) {
+                desc.includes('ML') || desc.match(/F\d\d\d\d/) !== null) {
                 vevent.getFirstProperty('location').setValue('Johanneberg | ' + desc);
             }
         }
