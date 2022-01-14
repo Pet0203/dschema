@@ -117,7 +117,7 @@ function rebuild(){
 
     if(ma) {getMas().forEach(obj => {newComp.addSubcomponent(obj)});}
     if(fy) {getFys().forEach(obj => {newComp.addSubcomponent(obj)});}
-    if(pfy) {getPKes().forEach(obj => {newComp.addSubcomponent(obj)});}
+    if(pfy) {getPFys().forEach(obj => {newComp.addSubcomponent(obj)});}
     if(pke) {getPKes().forEach(obj => {newComp.addSubcomponent(obj)});}
 
 
@@ -215,6 +215,6 @@ function modLoc() {
     });
 }
 //Debug stuff
-const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "false"]);
-console.log(encode);
-console.log(decodeURL(encode).toString());
+//const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "false"]);
+//console.log(encode);
+//console.log(decodeURL(encode).toString());
