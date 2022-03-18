@@ -43,14 +43,6 @@
             <input type="checkbox" id="fy" checked>Fysik (LMA538)
             <span class="checkmark"></span>
         </label>
-        <label class="precheck">
-            <input type="checkbox" id="pfy" checked>Projektkurs i fysik (MVE285)
-            <span class="checkmark"></span>
-        </label>
-        <label class="precheck">
-            <input type="checkbox" id="pke" checked>Projektkurs i kemi (KBT185)
-            <span class="checkmark"></span>
-        </label>
         <p>Modifikationer:</p>
         <label class="precheck">
             <input type="checkbox" id="loc" checked>Förbättra platsfältet
@@ -97,9 +89,7 @@
             document.getElementById('etc').checked}&${
             document.getElementById('loc').checked}&${
             document.getElementById('ma').checked}&${
-            document.getElementById('fy').checked}&${
-            document.getElementById('pfy').checked}&${
-            document.getElementById('pke').checked}`;
+            document.getElementById('fy').checked}&true&true`;
         let path = await fetch(url).then(data => data.text());
         return `https://tbschema.panivia.com/${path}`;
     }
