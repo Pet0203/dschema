@@ -3,7 +3,7 @@ const CryptoJS = require("crypto-js");
 const base32 = require('hi-base32');
 const fs = require("fs");
 let comp = new ICAL.Component();
-let group, etc, loc, ma, fy, pfy, pke;
+let group, etc, loc, ma, fy;
 
 module.exports.decodeURL = decodeURL;
 module.exports.encodeURL = encodeURL;
@@ -21,8 +21,8 @@ function decodeURL(url) {
             loc = numToBool(info[1]);
             ma = numToBool(info[2]);
             fy = numToBool(info[3]);
-            pfy = numToBool(info[4])
-            pke = numToBool(info[5]);
+            //pfy = numToBool(info[4]) Unused
+            //pke = numToBool(info[5]);
             //var ver = ""+ info[6]+ info[7]+ info[8]+ info[9] Unused
         } else
             return false;
@@ -45,8 +45,6 @@ function build(){
     }
     if(!ma) {getMas().forEach(obj => {comp.removeSubcomponent(obj)});}
     if(!fy) {getFys().forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!pfy) {getPFys().forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!pke) {getPKes().forEach(obj => {comp.removeSubcomponent(obj)});}
 
     if(loc)
         modLoc();
@@ -102,6 +100,13 @@ function buildForGroup(group) {
                 if (firstGroup > groupNum || lastGroup < groupNum)
                     comp.removeSubcomponent(vevent);
             }
+            else if (desc.match(/Grupp [0-9]+/) != null) {
+                const groupComponent = desc.match(/Grupp [0-9]+/)[0];
+                const evgroup = parseInt(groupComponent.substring(6));
+                const groupNum = parseInt(group.substring(8))
+                if (evgroup !== groupNum)
+                    comp.removeSubcomponent(vevent);
+            }
         }
     });
 }
@@ -111,15 +116,12 @@ function buildForGroup(group) {
 
 //If etc is false we need to rebuild the calendar
 function rebuild(){
-    var newComp = new ICAL.Component(ICAL.parse(comp.toString()));
+    const newComp = new ICAL.Component(ICAL.parse(comp.toString()));
 
     newComp.removeAllSubcomponents('vevent');
 
     if(ma) {getMas().forEach(obj => {newComp.addSubcomponent(obj)});}
     if(fy) {getFys().forEach(obj => {newComp.addSubcomponent(obj)});}
-    if(pfy) {getPFys().forEach(obj => {newComp.addSubcomponent(obj)});}
-    if(pke) {getPKes().forEach(obj => {newComp.addSubcomponent(obj)});}
-
 
     comp = newComp;
 
@@ -128,7 +130,7 @@ function rebuild(){
 }
 
 function getMas(){
-    var col = [];
+    const col = [];
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('summary') != null) {
@@ -143,7 +145,7 @@ function getMas(){
 }
 
 function getFys(){
-    var col = [];
+    const col = [];
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('summary') != null) {
@@ -157,45 +159,11 @@ function getFys(){
     return col;
 }
 
-function getPFys(){
-    var col = [];
-    comp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('summary') != null) {
-            var desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('MVE285')) {
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-}
-
-function getPKes(){
-    var col = [];
-    comp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('summary') != null) {
-            const desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('KBT185')) {
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-
-}
-
 function modLoc() {
     comp.getAllSubcomponents('vevent').forEach(vevent => {
 
         if (vevent.getFirstProperty('description') != null) {
             const desc = vevent.getFirstProperty('description').getFirstValue();
-            if (desc.includes('Film-föreläsning')) {
-                vevent.getFirstProperty('location').setValue('Inspelad på Canvas');
-            }
             if (desc.includes('Zoom')) {
                 vevent.getFirstProperty('location').setValue('Zoom');
             }
@@ -215,6 +183,6 @@ function modLoc() {
     });
 }
 //Debug stuff
-//const encode = encodeURL(["ZBASS-1.4", "true", "true", "true", "true", "true", "false"]);
+//const encode = encodeURL(["ZBASS-1.2", "true", "true", "true", "true", "true", "true"]);
 //console.log(encode);
 //console.log(decodeURL(encode).toString());

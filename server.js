@@ -10,7 +10,7 @@ function downloadiCal() {
         fs.truncate('./TimeEdit.ics', 0, function () {
         })
     } catch (e) {}
-    https.get('https://cloud.timeedit.net/chalmers/web/public/ri6YZ060Z55Z6gQ2Y65705005641y4Y0nQ68X06Qg77660Q05.ics', (res) => {
+    https.get('https://cloud.timeedit.net/chalmers/web/public/ri6YZ066Z75Z6gQ2Y65500005642y4Y0nQ68X66Qg77660Q07.ics', (res) => {
 
         // Open file in local filesystem
         const file = fs.createWriteStream(`TimeEdit.ics`);
