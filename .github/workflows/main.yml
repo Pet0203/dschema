@@ -10,7 +10,7 @@ on:
       tags:
         description: 'Test scenario tags'  
   push:
-    branches: [ master ]
+    branches: [main]
 
 jobs:
   deploy:
