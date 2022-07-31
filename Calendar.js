@@ -8,6 +8,7 @@ let group, etc, loc, ma;
 module.exports.decodeURL = decodeURL;
 module.exports.encodeURL = encodeURL;
 
+//Absolute mess
 function decodeURL(url) {
     if (url.includes("TB_Schema-") && url.includes(".ics")) {
         const encoded = url.substring(url.indexOf("TB_Schema-") + 10, url.indexOf(".ics"))
@@ -29,6 +30,7 @@ function decodeURL(url) {
     return false;
 }
 
+//???
 function numToBool(num){
     return num === "1";
 
@@ -160,6 +162,6 @@ function modLoc() {
     });
 }
 //Debug stuff
-//const encode = encodeURL(["ZBASS-1.2", "true", "true", "true", "true", "true", "true"]);
+//const encode = encodeURL(["ZBASS-1.2", "true", "true", "true"]);
 //console.log(encode);
 //console.log(decodeURL(encode).toString());

@@ -39,9 +39,10 @@ app.get('/', function(req, res){
 
 app.get('/api/getUrl', function(req, res){
     let data = req.url.substring(req.url.indexOf('?')+1).split('&');
-    if (data.length !== 7)
+    if (data.length !== 4)
         res.send("Invalid request.")
-    res.send(cal.encodeURL(data));
+    else
+        res.send(cal.encodeURL(data));
 });
 
 app.get('/TB_Schema-:id', function(req, res){
