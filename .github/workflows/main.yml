@@ -26,3 +26,4 @@ jobs:
         ssh_private_key: ${{ secrets.VPS_PRIVATE_KEY }}
         ssh_user: ${{ secrets.VPS_USER }}
         docker_compose_prefix: TBSchema
+        use_stack: 'true'
