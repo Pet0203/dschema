@@ -3,7 +3,7 @@ const CryptoJS = require("crypto-js");
 const base32 = require('hi-base32');
 const fs = require("fs");
 let comp = new ICAL.Component();
-let group, etc, loc, ma, fy;
+let group, etc, loc, ma;
 
 module.exports.decodeURL = decodeURL;
 module.exports.encodeURL = encodeURL;
@@ -16,14 +16,10 @@ function decodeURL(url) {
         const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split(' ');
         group = infosplit[0];
         const info = infosplit[1].split('')
-        if (info.length === 10) {
+        if (info.length === 7) {
             etc = numToBool(info[0]);
             loc = numToBool(info[1]);
             ma = numToBool(info[2]);
-            fy = numToBool(info[3]);
-            //pfy = numToBool(info[4]) Unused
-            //pke = numToBool(info[5]);
-            //var ver = ""+ info[6]+ info[7]+ info[8]+ info[9] Unused
         } else
             return false;
     iCal();
@@ -44,7 +40,6 @@ function build(){
         return comp;
     }
     if(!ma) {getMas().forEach(obj => {comp.removeSubcomponent(obj)});}
-    if(!fy) {getFys().forEach(obj => {comp.removeSubcomponent(obj)});}
 
     if(loc)
         modLoc();
@@ -56,9 +51,6 @@ Group: Undergroup in ZBASS-1.X format               DONE
 Etc: Övrig                                          DONE
 Loc: Whether we need changing of location or not    DONE
 Ma: Math classes                                    DONE
-Fy: Physics classes                                 DONE
-PFy: Physics-project classes                        DONE
-PKe: Chemistry-project classes                      DONE
 */
 function encodeURL(data = []) { //VER:2
     let uncodeUrl = data[0] + " ";
@@ -76,13 +68,14 @@ function iCal() {
     comp = new ICAL.Component(jCalData);
 }
 
+//???
 function strToBit(str){
     if(str !== 'false')
         return 1;
     return 0;
 }
 
-//Handles Group
+//Filters out events not relevant to selected group
 function buildForGroup(group) {
     comp.getAllSubcomponents('vevent').forEach(vevent => {
         if (vevent.getFirstProperty('description') != null) {
@@ -121,7 +114,6 @@ function rebuild(){
     newComp.removeAllSubcomponents('vevent');
 
     if(ma) {getMas().forEach(obj => {newComp.addSubcomponent(obj)});}
-    if(fy) {getFys().forEach(obj => {newComp.addSubcomponent(obj)});}
 
     comp = newComp;
 
@@ -136,21 +128,6 @@ function getMas(){
         if (vevent.getFirstProperty('summary') != null) {
             var desc = vevent.getFirstProperty('summary').getFirstValue();
             if (desc.includes('MVE426')) {
-                col.push(vevent);
-            }
-
-        }
-    })
-    return col;
-}
-
-function getFys(){
-    const col = [];
-    comp.getAllSubcomponents('vevent').forEach(vevent => {
-
-        if (vevent.getFirstProperty('summary') != null) {
-            var desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes('LMA538')) {
                 col.push(vevent);
             }
 

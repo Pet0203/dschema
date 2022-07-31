@@ -5,6 +5,7 @@ var cal = require('./Calendar');
 const fs = require("fs");
 const https = require('https');
 
+//TODO: This file low-key spams downloads from TimeEdit?
 function downloadiCal() {
     try {
         fs.truncate('./TimeEdit.ics', 0, function () {
