@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  web:
+    build: .
+    image: tbschema-git
+    ports:
+      - "8082:8082"
