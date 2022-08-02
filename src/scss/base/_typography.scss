@@ -1,0 +1,54 @@
+@import '../imports.scss';
+
+h1 {
+  font-family: $font;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 2.2rem;
+}
+
+h2 {
+  font-family: $font;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-family: $font;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+h4 {
+  font-family: $font;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-family: $font;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+p {
+  font-family: $font;
+  font-size: 1.1rem;
+  line-height: 1rem;
+}
+
+a {
+  font-family: $font;
+  font-size: 0.8rem;
+  line-height: 1rem;
+}
+
+input {
+  font-family: $font;
+  font-size: 0.8rem;
+}
+
+label {
+  font-family: $font;
+  font-size: 0.8rem;
+}

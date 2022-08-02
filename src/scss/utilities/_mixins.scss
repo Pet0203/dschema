@@ -1,0 +1,38 @@
+// Breakpoints
+@mixin breakpoint($point) {
+
+  // Small breakpoint
+  @if $point == sm {
+    @media (min-width: 576px) {
+      @content;
+    }
+  }
+
+  // Medium breakpoint
+  @if $point == md {
+    @media (min-width: 768px) {
+      @content;
+    }
+  }
+
+  // Large breakpoint
+  @if $point == lg {
+    @media (min-width: 992px) {
+      @content;
+    }
+  }
+
+  // Extra large breakpoint
+  @if $point == xl {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  }
+
+  // Extra extra large breakpoint
+  @if $point == xxl {
+    @media (min-width: 1400px) {
+      @content;
+    }
+  }
+}
