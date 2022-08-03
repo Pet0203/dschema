@@ -17,7 +17,28 @@ function App() {
    * @example
    * {value: 'grupp1', label: 'Grupp 1'}
    */
-  const [selectedOption, setSelectedOption] = useState({ value: 'grupp1', label: 'Grupp 1' });
+  const [selectedGroup, setSelectedGroup] = useState({ value: 'grupp1', label: 'Grupp 1' });
+
+  /**
+   * @type
+   * [{value: string, label: string}]
+   * @value
+   * Is returned from the select component when a value is selected
+   * @label
+   * Is the text that is displayed in the select component
+   * @description
+   * This is the object that is the current selected value in the select component
+   * @example
+   * [{value: 'matte', label: 'Matte'}]
+   */
+  const [selectedCourses, setSelectedCourses] = useState([
+    { value: 'matte', label: 'Matte' },
+    { value: 'fysik', label: 'Fysik' },
+    { value: 'kemi', label: 'Kemi' },
+    { value: 'proFys', label: 'Projektkurs Fysik' },
+    { value: 'proKem', label: 'Projektkurs Kemi' },
+    { value: 'programmering', label: 'Programmering' },
+  ]);
 
   /**
    * @type
@@ -31,7 +52,7 @@ function App() {
    * @example
    * {value: 'grupp1', label: 'Grupp 1'}
    */
-  const options = [
+  const groups = [
     { value: 'grupp1', label: 'Grupp 1' },
     { value: 'grupp2', label: 'Grupp 2' },
     { value: 'grupp3', label: 'Grupp 3' },
@@ -44,6 +65,27 @@ function App() {
     { value: 'grupp10', label: 'Grupp 10' },
   ];
 
+  /**
+   * @type
+   * [{value: string, label: string}]
+   * @value
+   * Is returned from the select component when a value is selected
+   * @label
+   * Is the text that is displayed in the select component
+   * @description
+   * This is the array of selected options for the select component.
+   * @example
+   * [{value: 'matte', label: 'Matte'}]
+   */
+  const courses = [
+    { value: 'matte', label: 'Matte' },
+    { value: 'fysik', label: 'Fysik' },
+    { value: 'kemi', label: 'Kemi' },
+    { value: 'proFys', label: 'Projektkurs Fysik' },
+    { value: 'proKem', label: 'Projektkurs Kemi' },
+    { value: 'programmering', label: 'Programmering' },
+  ];
+
   return (
     <div className={styles.app}>
       <section className={styles.section}>
@@ -54,7 +96,7 @@ function App() {
               Välj grupp
             </h4>
             <div className={styles.items}>
-              <Select className={styles.react_select_container} defaultValue={selectedOption} options={options} />
+              <Select className={styles.react_select_container} defaultValue={selectedGroup} options={groups} />
             </div>
           </div>
           <div>
@@ -62,18 +104,7 @@ function App() {
               Välj kurser
             </h4>
             <div className={styles.items}>
-              <div>
-                <label htmlFor="math">Matematik</label>
-                <input type="checkbox" id="math" name="math" value="Matematik"></input>
-              </div>
-              <div>
-                <label htmlFor="chemistry">Kemi</label>
-                <input type="checkbox" id="chemistry" name="chemistry" value="Kemi"></input>
-              </div>
-              <div>
-                <label htmlFor="physics">Fysik</label>
-                <input type="checkbox" id="physics" name="physics" value="Fysik"></input>
-              </div>
+              <Select className={styles.react_select_container} isMulti closeMenuOnSelect={false} defaultValue={selectedCourses} options={courses} />
             </div>
           </div>
           <div>
@@ -81,8 +112,11 @@ function App() {
               Modifikationer
             </h4>
             <div className={styles.items}>
-              <label htmlFor="mod1">Förbättra platsfältet</label>
-              <input type="checkbox" id="mod1" name="mod1" value="mod1 "></input>
+              <label className={styles.checkbox}>
+                Förbättra platsfältet
+                <input name="mod1" type="checkbox"></input>
+                <span className={styles.checkbox__checkmark}></span>
+              </label>
             </div>
           </div>
           <div className={styles.calendar_url}>

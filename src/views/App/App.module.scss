@@ -15,7 +15,9 @@
 
 .section {
   border-radius: $borderRadius;
-  min-width: 90%;
+  min-width: 80%;
+  max-width: min(90%, 700px);
+  margin: 0 auto;
 
   @include breakpoint(sm) {
     min-width: 500px;
@@ -71,6 +73,37 @@
       color: $text;
     }
 
+    [class$='-multiValue'] {
+      background-color: #09cdda;
+      &:nth-child(2) {
+        background-color: #a154a1;
+      }
+      &:nth-child(3) {
+        background-color: #e22781;
+      }
+      &:nth-child(4) {
+        background-color: #2f74b6;
+      }
+      &:nth-child(5) {
+        background-color: #a4d71e;
+      }
+      &:nth-child(6) {
+        background-color: #f45e22;
+      }
+      &:nth-child(7) {
+        background-color: #cb1317;
+      }
+
+      div {
+        color: $dark;
+      }
+    }
+
+    [class$='-multiValue'] div:last-child:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
     &:hover {
       border-color: $primary;
     }
@@ -87,6 +120,68 @@
 
     &:hover {
       background-color: $primary;
+    }
+  }
+}
+
+.checkbox {
+  display: inline;
+  position: relative;
+  width: max-content;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 5px;
+
+  // &:hover input ~ &__checkmark {
+  //   background-color: #ccc;
+  // }
+
+  input:checked ~ &__checkmark {
+    background-color: $primary;
+  }
+
+  input:checked ~ &__checkmark:after {
+    display: block;
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  &__checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: $borderRadius;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+
+    &:after {
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
     }
   }
 }
