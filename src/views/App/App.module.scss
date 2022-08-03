@@ -5,6 +5,7 @@
   height: 100vh;
   background-color: $dark;
   text-align: center;
+  font-family: $font;
 
   @include breakpoint(sm) {
     display: flex;
