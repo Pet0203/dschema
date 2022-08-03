@@ -15,23 +15,31 @@
   .section {
     border-radius: $borderRadius;
     min-width: 90%;
-    
+
     @include breakpoint(sm) {
       min-width: 500px;
       background-color: $main;
       box-shadow: 5px 4px 21px 0px rgba(0, 0, 0, 0.37);
       -webkit-box-shadow: 5px 4px 21px 0px rgba(0, 0, 0, 0.37);
       -moz-box-shadow: 5px 4px 21px 0px rgba(0, 0, 0, 0.37);
+
+      .container {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        color: $text;
+      }
     }
 
-    .container {
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      color: $text;
+    .title {
+      color: #fff;
+    }
+
+    .subtitle {
+      color: $primary;
     }
 
     .react_select_container {
@@ -46,7 +54,10 @@
         }
 
         &:hover {
-          border-color: #fff;
+          border-color: $primary;
+        }
+        &:focus {
+          border-color: $primary;
         }
       }
 
@@ -62,53 +73,16 @@
       }
     }
 
-    .title {
-      color: #fff;
-    }
-
-    .subtitle {
-      color: $primary;
-    }
-
-    .courses {
-    }
-
     .items {
       padding: 0.5rem;
-    }
 
-    .checkboxes {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.2rem;
-    }
-
-    input {
-      padding: 0.5rem 1rem;
-      border-radius: $borderRadius;
-      border: none;
-      outline: none;
-      color: #fff;
-      background-color: $main;
-      cursor: pointer;
-      border: 1px solid $text;
-
-      &:focus,
-      &:hover {
-        border: 1px solid $primary;
+      &--checkboxes {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
       }
-    }
-
-    button {
-      padding: 0.75rem 1rem;
-      border-radius: $borderRadius;
-      border: none;
-      outline: none;
-      background-color: $primary;
-      color: #fff;
-      cursor: pointer;
     }
 
     .calendar_url {
@@ -117,6 +91,32 @@
       justify-content: center;
       flex-direction: column;
       gap: 0.5rem;
+
+      &__primary_button {
+        padding: 0.75rem 1rem;
+        border-radius: $borderRadius;
+        border: none;
+        outline: none;
+        background-color: $primary;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      &__url_input {
+        padding: 0.5rem 1rem;
+        border-radius: $borderRadius;
+        border: none;
+        outline: none;
+        color: #fff;
+        background-color: $main;
+        cursor: pointer;
+        border: 1px solid $text;
+
+        &:focus,
+        &:hover {
+          border: 1px solid $primary;
+        }
+      }
     }
 
     .credits {

@@ -30,9 +30,9 @@ function App() {
               <Select className={styles.react_select_container} defaultValue={selectedOption} options={options} />
             </div>
           </div>
-          <div className={styles.courses}>
+          <div>
             <h4 className={styles.subtitle}>Välj kurser</h4>
-            <div className={[styles.items, styles.checkboxes].join(' ')}>
+            <div className={[styles.items, styles["items--checkboxes"]].join(' ')}>
               <div>
                 <label htmlFor="math">Matematik</label>
                 <input type="checkbox" id="math" name="math" value="Matematik"></input>
@@ -56,9 +56,9 @@ function App() {
           </div>
           <div className={styles.calendar_url}>
             <h4 className={styles.subtitle}>Kalender URL</h4>
-            <button>Kopiera kalender url</button>
+            <button className={styles.calendar_url__primary_button}>Kopiera kalender url</button>
             <p>OR manually copy the url</p>
-            <input type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+            <input className={styles.calendar_url__url_input} type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
           </div>
           {/* <p>
             Går det inte att prenumera via url?
