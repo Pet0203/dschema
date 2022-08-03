@@ -5,8 +5,32 @@ import styles from './App.module.scss';
 import { Clipboard, Gift, Heart } from 'react-feather';
 
 function App() {
+  /**
+   * @type 
+   * {value: string, label: string}
+   * @value
+   * Is returned from the select component when a value is selected
+   * @label
+   * Is the text that is displayed in the select component
+   * @description
+   * This is the object that is the current selected value in the select component
+   * @example
+   * {value: 'grupp1', label: 'Grupp 1'}
+   */
   const [selectedOption, setSelectedOption] = useState({ value: 'grupp1', label: 'Grupp 1' });
 
+  /**
+   * @type 
+   * [{value: string, label: string}]
+   * @value
+   * Is returned from the select component when a value is selected
+   * @label
+   * Is the text that is displayed in the select component
+   * @description
+   * This is the array of selected options for the select component.
+   * @example
+   * {value: 'grupp1', label: 'Grupp 1'}
+   */
   const options = [
     { value: 'grupp1', label: 'Grupp 1' },
     { value: 'grupp2', label: 'Grupp 2' },
@@ -61,13 +85,6 @@ function App() {
             <p>OR manually copy the url</p>
             <input className={styles.calendar_url__url_input} type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
           </div>
-          {/* <p>
-            Går det inte att prenumera via url?
-            <br />
-            Ladda ner .ical och importera den till din kalender.
-          </p>
-          <button>Ladda ner .ical</button> */}
-
           <div className={styles.credits}>
             <p className={styles.credits__made_with}>Made with<Heart className={styles["credits__made_with--heart"]} size={16} />in Gothenburg, Sweden</p>
             <p>En slant för arbetet skadar aldrig!</p>
