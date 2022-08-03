@@ -43,6 +43,25 @@
     color: $primary;
   }
 
+  .tooltip {
+    position: relative;
+    cursor: help;
+
+    &:hover::after {
+      border-radius: $borderRadius;
+      content: attr(data-tooltip) ;
+      font-size: 1rem;
+      position: absolute;
+      top: 1.1em;
+      left: 1em;
+      min-width: 200px;
+      border: 1px $primary solid;
+      padding: 0.5rem;
+      color: $text;
+      background-color: $main;
+      z-index: 1;
+    }
+  }
   .react_select_container {
     [class$='-control'] {
       background-color: $light;
@@ -156,7 +175,8 @@
 }
 
 @keyframes example {
-  0%, 100% {
+  0%,
+  100% {
     color: #001057;
     fill: #001057;
   }
