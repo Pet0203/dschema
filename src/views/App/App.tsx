@@ -54,11 +54,12 @@ function App() {
               <input type="checkbox" id="mod1" name="mod1" value="mod1 "></input>
             </div>
           </div>
-          <button>Kopiera kalender url</button>
-
-          <p>OR manually copy the url</p>
-
-          <input type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+          <div className={styles.calendar_url}>
+            <h4 className={styles.subtitle}>Kalender URL</h4>
+            <button>Kopiera kalender url</button>
+            <p>OR manually copy the url</p>
+            <input type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+          </div>
           {/* <p>
             Går det inte att prenumera via url?
             <br />
