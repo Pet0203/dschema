@@ -20,9 +20,9 @@
     @include breakpoint(sm) {
       min-width: 500px;
       background-color: $main;
-      box-shadow: 3px 3px 5px -3px rgba(0,0,0,0.58);
-      -webkit-box-shadow: 3px 3px 5px -3px rgba(0,0,0,0.58);
-      -moz-box-shadow: 3px 3px 5px -3px rgba(0,0,0,0.58);
+      box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
+      -webkit-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
+      -moz-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
     }
     .container {
       padding: 4rem 2rem;
@@ -100,6 +100,10 @@
         background-color: $primary;
         color: #fff;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
       }
 
       &__url_input {
@@ -126,6 +130,50 @@
       justify-content: center;
       flex-direction: column;
       gap: 0.5rem;
+
+      &__made_with {
+        display: flex;
+        gap: 0.3rem;
+
+        &--heart {
+          color: $primary;
+          fill: $primary;
+          animation-name: example;
+          animation-duration: 4s;
+          animation-iteration-count: infinite;
+        }
+      }
+
+      &__paypal {
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+      }
     }
+  }
+}
+
+@keyframes example {
+  0%, 100% {
+    color: #001057;
+    fill: #001057;
+  }
+  20% {
+    color: #a154a1;
+    fill: #a154a1;
+  }
+  40% {
+    color: #e22781;
+    fill: #e22781;
+  }
+  60% {
+    color: #09cdda;
+    fill: #09cdda;
+  }
+  80% {
+    color: #a4d71e;
+    fill: #a4d71e;
   }
 }
