@@ -6,7 +6,7 @@ import { Clipboard, Gift, Heart } from 'react-feather';
 
 function App() {
   /**
-   * @type 
+   * @type
    * {value: string, label: string}
    * @value
    * Is returned from the select component when a value is selected
@@ -20,7 +20,7 @@ function App() {
   const [selectedOption, setSelectedOption] = useState({ value: 'grupp1', label: 'Grupp 1' });
 
   /**
-   * @type 
+   * @type
    * [{value: string, label: string}]
    * @value
    * Is returned from the select component when a value is selected
@@ -50,14 +50,18 @@ function App() {
         <div className={styles.container}>
           <h2 className={styles.title}>TB Schema | Prenumerera</h2>
           <div>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj din TB undergrupp">Välj grupp</h4>
+            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj din TB undergrupp">
+              Välj grupp
+            </h4>
             <div className={styles.items}>
               <Select className={styles.react_select_container} defaultValue={selectedOption} options={options} />
             </div>
           </div>
           <div>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj de kurser du vill inkludera i schemat">Välj kurser</h4>
-            <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
+            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj de kurser du vill inkludera i schemat">
+              Välj kurser
+            </h4>
+            <div className={styles.items}>
               <div>
                 <label htmlFor="math">Matematik</label>
                 <input type="checkbox" id="math" name="math" value="Matematik"></input>
@@ -73,20 +77,32 @@ function App() {
             </div>
           </div>
           <div>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip='Lägger till "Lindholmen" eller "Johanneberg" i platsfältet" '>Modifikationer</h4>
+            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip='Lägger till "Lindholmen" eller "Johanneberg" i platsfältet" '>
+              Modifikationer
+            </h4>
             <div className={styles.items}>
               <label htmlFor="mod1">Förbättra platsfältet</label>
               <input type="checkbox" id="mod1" name="mod1" value="mod1 "></input>
             </div>
           </div>
           <div className={styles.calendar_url}>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Brukar gå att klistra in i de flesta kalender apparna">Kalender URL</h4>
-            <button className={styles.calendar_url__primary_button}><Clipboard size={16} /> Kopiera kalender url</button>
-            <p>OR manually copy the url</p>
-            <input className={styles.calendar_url__url_input} type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Brukar gå att klistra in i de flesta kalender apparna">
+              Kalender URL
+            </h4>
+            <div className={[styles.items, styles['items--calendar_url']].join(' ')}>
+              <button className={styles.calendar_url__primary_button}>
+                <Clipboard size={16} /> Kopiera kalender url
+              </button>
+              <p>OR manually copy the url</p>
+              <input className={styles.calendar_url__url_input} type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+            </div>
           </div>
           <div className={styles.credits}>
-            <p className={styles.credits__made_with}>Made with<Heart className={styles["credits__made_with--heart"]} size={16} />in Gothenburg, Sweden</p>
+            <p className={styles.credits__made_with}>
+              Made with
+              <Heart className={styles['credits__made_with--heart']} size={16} />
+              in Gothenburg, Sweden
+            </p>
             <p>En slant för arbetet skadar aldrig!</p>
             <a className={styles.credits__paypal} href="https://paypal.me/memgod">
               <Gift size={16} />
