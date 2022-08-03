@@ -12,145 +12,145 @@
     align-items: center;
     justify-content: center;
   }
+}
 
-  .section {
-    border-radius: $borderRadius;
-    min-width: 90%;
+.section {
+  border-radius: $borderRadius;
+  min-width: 90%;
 
-    @include breakpoint(sm) {
-      min-width: 500px;
-      background-color: $main;
-      box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
-      -webkit-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
-      -moz-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
-    }
-    .container {
-      padding: 4rem 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
+  @include breakpoint(sm) {
+    min-width: 500px;
+    background-color: $main;
+    box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
+    -webkit-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
+    -moz-box-shadow: 3px 3px 5px -3px rgba(0, 0, 0, 0.58);
+  }
+  .container {
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    color: $text;
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .subtitle {
+    color: $primary;
+  }
+
+  .react_select_container {
+    [class$='-control'] {
+      background-color: $light;
+      border-color: $light;
       color: $text;
-    }
+      transition: none;
 
-    .title {
-      color: #fff;
-    }
-
-    .subtitle {
-      color: $primary;
-    }
-
-    .react_select_container {
-      [class$='-control'] {
-        background-color: $light;
-        border-color: $light;
+      [class$='-singleValue'] {
         color: $text;
-        transition: none;
-
-        [class$='-singleValue'] {
-          color: $text;
-        }
-
-        &:hover {
-          border-color: $primary;
-        }
-        &:focus {
-          border-color: $primary;
-        }
       }
 
-      [class$='-menu'] {
-        background-color: $light;
+      &:hover {
+        border-color: $primary;
       }
-      [class$='-option'] {
-        background-color: $light;
-
-        &:hover {
-          background-color: $primary;
-        }
+      &:focus {
+        border-color: $primary;
       }
     }
 
-    .items {
-      padding: 0.5rem;
+    [class$='-menu'] {
+      background-color: $light;
+    }
+    [class$='-option'] {
+      background-color: $light;
 
-      &--checkboxes {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.2rem;
+      &:hover {
+        background-color: $primary;
       }
     }
+  }
 
-    .calendar_url {
+  .items {
+    padding: 0.5rem;
+
+    &--checkboxes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+  }
+
+  .calendar_url {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__primary_button {
+      padding: 0.75rem 1rem;
+      border-radius: $borderRadius;
+      border: none;
+      outline: none;
+      background-color: $primary;
+      color: #fff;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
+    }
 
-      &__primary_button {
-        padding: 0.75rem 1rem;
-        border-radius: $borderRadius;
-        border: none;
-        outline: none;
-        background-color: $primary;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
+    &__url_input {
+      padding: 0.5rem 1rem;
+      border-radius: $borderRadius;
+      border: none;
+      outline: none;
+      color: #fff;
+      background-color: $main;
+      cursor: pointer;
+      border: 1px solid $text;
+
+      &:focus,
+      &:hover {
+        border: 1px solid $primary;
       }
+    }
+  }
 
-      &__url_input {
-        padding: 0.5rem 1rem;
-        border-radius: $borderRadius;
-        border: none;
-        outline: none;
-        color: #fff;
-        background-color: $main;
-        cursor: pointer;
-        border: 1px solid $text;
+  .credits {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
 
-        &:focus,
-        &:hover {
-          border: 1px solid $primary;
-        }
+    &__made_with {
+      display: flex;
+      gap: 0.3rem;
+
+      &--heart {
+        color: $primary;
+        fill: $primary;
+        animation-name: example;
+        animation-duration: 4s;
+        animation-iteration-count: infinite;
       }
     }
 
-    .credits {
+    &__paypal {
       margin-top: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      &__made_with {
-        display: flex;
-        gap: 0.3rem;
-
-        &--heart {
-          color: $primary;
-          fill: $primary;
-          animation-name: example;
-          animation-duration: 4s;
-          animation-iteration-count: infinite;
-        }
-      }
-
-      &__paypal {
-        margin-top: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-      }
+      gap: 0.4rem;
     }
   }
 }
