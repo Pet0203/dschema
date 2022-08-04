@@ -102,10 +102,15 @@ function App() {
 
       setUrlInput('https://tbschema.panivia.com/api/getUrl?' + JSON.stringify(request));
 
-      // let url = `https://tbschema.panivia.com/api/getUrl?${group.value}&${true}&${true}&${courses?.map((course) => course.value).join('-')}`;
-      // let path = await fetch(url).then((data) => data.text());
-      // return `https://tbschema.panivia.com/${path}`;
-      // console.log(url);
+      fetch('http://localhost:5000/api/v1/getUrl/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
     }
   }
 
