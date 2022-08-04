@@ -39,7 +39,7 @@ function App() {
    * @param {string} value    Value used for the option
    * @param {string} label    Value used as display text
    */
-  const courses = [
+  const courses: ICourses[] = [
     { value: 'matte', label: 'Matte' },
     { value: 'fysik', label: 'Fysik' },
     { value: 'kemi', label: 'Kemi' },
