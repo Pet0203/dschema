@@ -17,36 +17,69 @@ interface ICourses {
 function App() {
   const [selectedGroup, setSelectedGroup] = useState<IGroups>();
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
+  const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
+  const [checkedExam, setCheckedExam] = useState<boolean>(false);
+  const [urlInput, setUrlInput] = useState<string>();
 
   const groups: IGroups[] = [
-    { value: 'grupp1', label: 'Grupp 1' },
-    { value: 'grupp2', label: 'Grupp 2' },
-    { value: 'grupp3', label: 'Grupp 3' },
-    { value: 'grupp4', label: 'Grupp 4' },
-    { value: 'grupp5', label: 'Grupp 5' },
-    { value: 'grupp6', label: 'Grupp 6' },
-    { value: 'grupp7', label: 'Grupp 7' },
-    { value: 'grupp8', label: 'Grupp 8' },
-    { value: 'grupp9', label: 'Grupp 9' },
-    { value: 'grupp10', label: 'Grupp 10' },
+    { value: 'ZBASS-1.1', label: 'Grupp 1' },
+    { value: 'ZBASS-1.2', label: 'Grupp 2' },
+    { value: 'ZBASS-1.3', label: 'Grupp 3' },
+    { value: 'ZBASS-1.4', label: 'Grupp 4' },
+    { value: 'ZBASS-1.5', label: 'Grupp 5' },
+    { value: 'ZBASS-1.6', label: 'Grupp 6' },
+    { value: 'ZBASS-1.7', label: 'Grupp 7' },
+    { value: 'ZBASS-1.8', label: 'Grupp 8' },
+    { value: 'ZBASS-1.9', label: 'Grupp 9' },
+    { value: 'ZBASS-1.10', label: 'Grupp 10' },
   ];
 
   const courses = [
     { value: 'matte', label: 'Matte' },
     { value: 'fysik', label: 'Fysik' },
     { value: 'kemi', label: 'Kemi' },
-    { value: 'proFys', label: 'Projektkurs Fysik' },
-    { value: 'proKem', label: 'Projektkurs Kemi' },
+    { value: 'projektkurs_fysik', label: 'Projektkurs Fysik' },
+    { value: 'projektkurs_kemi', label: 'Projektkurs Kemi' },
     { value: 'programmering', label: 'Programmering' },
   ];
 
   const handleGroupChange = (selected?: IGroups | IGroups[] | null) => {
     setSelectedGroup(selected as IGroups);
+    getDownloadLink(selected as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
   };
 
   const handleCoursesChange = (selected: readonly ICourses[]) => {
     setSelectedCourses(selected as ICourses[]);
+    getDownloadLink(selectedGroup as IGroups, selected as ICourses[], checkedLocation as boolean, checkedExam as boolean);
   };
+
+  const handleLocationChecked = (checked: boolean) => {
+    setCheckedLocation(checked);
+    getDownloadLink(selectedGroup as IGroups, selectedCourses as ICourses[], checked as boolean, checkedExam as boolean);
+  };
+
+  const handleExamsChecked = (checked: boolean) => {
+    setCheckedExam(checked);
+    getDownloadLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checked as boolean);
+  };
+
+  async function getDownloadLink(group: IGroups, courses: ICourses[], location: boolean, exam: boolean) {
+    if (group && courses && courses.length > 0) {
+      const request = {
+        group: group.value,
+        modLocation: location,
+        modExam: exam,
+        courses: courses.map((course: ICourses) => course.value),
+      };
+
+      setUrlInput('https://tbschema.panivia.com/api/getUrl?' + JSON.stringify(request));
+
+      // let url = `https://tbschema.panivia.com/api/getUrl?${group.value}&${true}&${true}&${courses?.map((course) => course.value).join('-')}`;
+      // let path = await fetch(url).then((data) => data.text());
+      // return `https://tbschema.panivia.com/${path}`;
+      // console.log(url);
+    }
+  }
 
   return (
     <div className={styles.app}>
@@ -75,10 +108,15 @@ function App() {
                 <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip='Lägger till "Lindholmen" eller "Johanneberg" i platsfältet" '>
                   Modifikationer
                 </h4>
-                <div className={styles.items}>
+                <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox"></input>
+                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)}></input>
+                    <span className={styles.checkbox__checkmark}></span>
+                  </label>
+                  <label className={styles.checkbox}>
+                    Inkludera tentor och anmällan
+                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)}></input>
                     <span className={styles.checkbox__checkmark}></span>
                   </label>
                 </div>
@@ -93,7 +131,7 @@ function App() {
                       <Clipboard size={16} /> Kopiera kalender url
                     </button>
                     <p>OR manually copy the url</p>
-                    <input className={styles.calendar_url__url_input} type="text" readOnly={true} value="https://testurl.comdnuanwduanwdunauiwdniauwnduawndiuanw" />
+                    <input className={styles.calendar_url__url_input} type="text" readOnly={true} value={urlInput} />
                   </div>
                 </div>
               )}

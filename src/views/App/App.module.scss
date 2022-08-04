@@ -232,6 +232,12 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+
+  &--checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 
 .credits {
