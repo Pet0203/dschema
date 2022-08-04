@@ -100,7 +100,8 @@ function App() {
         courses: courses.map((course: ICourses) => course.value),
       };
 
-      setUrlInput('https://tbschema.panivia.com/api/getUrl?' + JSON.stringify(request));
+      // This will be replaced with below json response returning URL
+      setUrlInput('https://tbschema.panivia.com/api/getUrl' + JSON.stringify(request));
 
       fetch('http://localhost:5000/api/v1/getUrl/', {
         method: 'POST',
@@ -110,6 +111,7 @@ function App() {
         body: JSON.stringify(request),
       })
         .then((response) => response.json())
+        // This will later replace the setUrlInput above
         .then((json) => console.log(json));
     }
   }
