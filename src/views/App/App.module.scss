@@ -69,6 +69,10 @@
     color: $text;
     transition: none;
 
+    [class$='-Input'] {
+      color: $text;
+    }
+
     [class$='-singleValue'] {
       color: $text;
     }
