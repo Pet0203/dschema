@@ -3,24 +3,24 @@ import Select from 'react-select';
 import '../../scss/main.scss';
 import styles from './App.module.scss';
 import { Clipboard, Gift, Heart } from 'react-feather';
-
-interface IGroups {
-  value: string;
-  label: string;
-}
-
-interface ICourses {
-  value: string;
-  label: string;
-}
+import { IGroups } from '../../interfaces/IGroups';
+import { ICourses } from '../../interfaces/ICourses';
 
 function App() {
+  /**
+   * States for all the selectors
+   */
   const [selectedGroup, setSelectedGroup] = useState<IGroups>();
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
   const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
   const [checkedExam, setCheckedExam] = useState<boolean>(false);
   const [urlInput, setUrlInput] = useState<string>();
 
+  /**
+   * Group options for react-select component
+   * @param {string} value
+   * @param {string} label
+   */
   const groups: IGroups[] = [
     { value: 'ZBASS-1.1', label: 'Grupp 1' },
     { value: 'ZBASS-1.2', label: 'Grupp 2' },
@@ -34,6 +34,11 @@ function App() {
     { value: 'ZBASS-1.10', label: 'Grupp 10' },
   ];
 
+  /**
+   * Group options for react-select component
+   * @param {string} value    Value used for the option
+   * @param {string} label    Value used as display text
+   */
   const courses = [
     { value: 'matte', label: 'Matte' },
     { value: 'fysik', label: 'Fysik' },
@@ -43,27 +48,50 @@ function App() {
     { value: 'programmering', label: 'Programmering' },
   ];
 
+  /**
+   * Handles the change of the react-select component for the group
+   * @param {IGroups | IGroups[] | null} selected§    Value of the selected group
+   */
   const handleGroupChange = (selected?: IGroups | IGroups[] | null) => {
     setSelectedGroup(selected as IGroups);
-    getDownloadLink(selected as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
+    getIcalLink(selected as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
   };
 
+  /**
+   * Handles the change of the react-select component for the courses
+   * @param {ICourses | ICourses[] | null} selected   Value of the selected course
+   */
   const handleCoursesChange = (selected: readonly ICourses[]) => {
     setSelectedCourses(selected as ICourses[]);
-    getDownloadLink(selectedGroup as IGroups, selected as ICourses[], checkedLocation as boolean, checkedExam as boolean);
+    getIcalLink(selectedGroup as IGroups, selected as ICourses[], checkedLocation as boolean, checkedExam as boolean);
   };
 
+  /**
+   * Handles the change for the location checkbox
+   * @param {boolean} checked   State of the location checkbox
+   */
   const handleLocationChecked = (checked: boolean) => {
     setCheckedLocation(checked);
-    getDownloadLink(selectedGroup as IGroups, selectedCourses as ICourses[], checked as boolean, checkedExam as boolean);
+    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checked as boolean, checkedExam as boolean);
   };
 
+  /**
+   * Handles the change for the exam checkbox
+   * @param {boolean} checked   State of the exams checkbox
+   */
   const handleExamsChecked = (checked: boolean) => {
     setCheckedExam(checked);
-    getDownloadLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checked as boolean);
+    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checked as boolean);
   };
 
-  async function getDownloadLink(group: IGroups, courses: ICourses[], location: boolean, exam: boolean) {
+  /**
+   * Calls the API to get the .ical link
+   * @param {IGroups} group     The selected group
+   * @param {ICourses} courses  The selected courses
+   * @param {boolean} location  State of location checkbox
+   * @param {boolean} exam      State if exams checkbox
+   */
+  async function getIcalLink(group: IGroups, courses: ICourses[], location: boolean, exam: boolean) {
     if (group && courses && courses.length > 0) {
       const request = {
         group: group.value,
