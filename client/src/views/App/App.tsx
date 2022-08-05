@@ -22,16 +22,16 @@ function App() {
    * @param {string} label
    */
   const groups: IGroups[] = [
-    { value: 'ZBASS-1.1', label: 'Grupp 1' },
-    { value: 'ZBASS-1.2', label: 'Grupp 2' },
-    { value: 'ZBASS-1.3', label: 'Grupp 3' },
-    { value: 'ZBASS-1.4', label: 'Grupp 4' },
-    { value: 'ZBASS-1.5', label: 'Grupp 5' },
-    { value: 'ZBASS-1.6', label: 'Grupp 6' },
-    { value: 'ZBASS-1.7', label: 'Grupp 7' },
-    { value: 'ZBASS-1.8', label: 'Grupp 8' },
-    { value: 'ZBASS-1.9', label: 'Grupp 9' },
-    { value: 'ZBASS-1.10', label: 'Grupp 10' },
+    { value: '1', label: 'Grupp 1' },
+    { value: '2', label: 'Grupp 2' },
+    { value: '3', label: 'Grupp 3' },
+    { value: '4', label: 'Grupp 4' },
+    { value: '5', label: 'Grupp 5' },
+    { value: '6', label: 'Grupp 6' },
+    { value: '7', label: 'Grupp 7' },
+    { value: '8', label: 'Grupp 8' },
+    { value: '9', label: 'Grupp 9' },
+    { value: '10', label: 'Grupp 10' },
   ];
 
   /**
@@ -40,12 +40,12 @@ function App() {
    * @param {string} label    Value used as display text
    */
   const courses: ICourses[] = [
-    { value: 'matte', label: 'Matte' },
-    { value: 'fysik', label: 'Fysik' },
-    { value: 'kemi', label: 'Kemi' },
-    { value: 'projektkurs_fysik', label: 'Projektkurs Fysik' },
-    { value: 'projektkurs_kemi', label: 'Projektkurs Kemi' },
-    { value: 'programmering', label: 'Programmering' },
+    { value: 'ma', label: 'Matte' },
+    { value: 'fy', label: 'Fysik' },
+    { value: 'ke', label: 'Kemi' },
+    { value: 'pfy', label: 'Projektkurs Fysik' },
+    { value: 'pke', label: 'Projektkurs Kemi' },
+    { value: 'pro', label: 'Programmering' },
   ];
 
   /**
@@ -100,9 +100,6 @@ function App() {
         courses: courses.map((course: ICourses) => course.value),
       };
 
-      // This will be replaced with below json response returning URL
-      setUrlInput('https://tbschema.panivia.com/api/getUrl' + JSON.stringify(request));
-
       fetch('http://localhost:5000/api/v1/getUrl/', {
         method: 'POST',
         headers: {
@@ -112,7 +109,7 @@ function App() {
       })
         .then((response) => response.json())
         // This will later replace the setUrlInput above
-        .then((json) => console.log(json));
+        .then((json) => setUrlInput(json.url));
     }
   }
 
@@ -146,13 +143,13 @@ function App() {
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)}></input>
-                    <span className={styles.checkbox__checkmark}></span>
+                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)}/>
+                    <span className={styles.checkbox__checkmark}/>
                   </label>
                   <label className={styles.checkbox}>
                     Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)}></input>
-                    <span className={styles.checkbox__checkmark}></span>
+                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)}/>
+                    <span className={styles.checkbox__checkmark}/>
                   </label>
                 </div>
               </div>
