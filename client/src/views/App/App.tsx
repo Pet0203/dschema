@@ -14,7 +14,7 @@ function App() {
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
   const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
   const [checkedExam, setCheckedExam] = useState<boolean>(false);
-  const [urlInput, setUrlInput] = useState<string>("");
+  const [calendarUrl, setCalendarUrl] = useState<string>('');
 
   /**
    * Group options for react-select component
@@ -109,9 +109,14 @@ function App() {
       })
         .then((response) => response.json())
         // This will later replace the setUrlInput above
-        .then((json) => setUrlInput(json.url));
+        .then((json) => setCalendarUrl(json.url));
     }
   }
+
+  const copyUrlToClipboard = async () => {
+    await navigator.clipboard.writeText(calendarUrl);
+    alert('Url copied');
+  };
 
   return (
     <div className={styles.app}>
@@ -143,13 +148,13 @@ function App() {
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)}/>
-                    <span className={styles.checkbox__checkmark}/>
+                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} />
+                    <span className={styles.checkbox__checkmark} />
                   </label>
                   <label className={styles.checkbox}>
                     Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)}/>
-                    <span className={styles.checkbox__checkmark}/>
+                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} />
+                    <span className={styles.checkbox__checkmark} />
                   </label>
                 </div>
               </div>
@@ -159,11 +164,11 @@ function App() {
                     Kalender URL
                   </h4>
                   <div className={[styles.items, styles['items--calendar_url']].join(' ')}>
-                    <button className={styles.calendar_url__primary_button}>
+                    <button onClick={copyUrlToClipboard} className={styles.calendar_url__primary_button}>
                       <Clipboard size={16} /> Kopiera kalender url
                     </button>
                     <p>OR manually copy the url</p>
-                    <input className={styles.calendar_url__url_input} type="text" readOnly={true} value={urlInput} />
+                    <input className={styles.calendar_url__url_input} type="text" readOnly={true} value={calendarUrl} />
                   </div>
                 </div>
               )}
