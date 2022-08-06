@@ -14,7 +14,7 @@ function App() {
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
   const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
   const [checkedExam, setCheckedExam] = useState<boolean>(false);
-  const [urlInput, setUrlInput] = useState<string>();
+  const [urlInput, setUrlInput] = useState<string>("");
 
   /**
    * Group options for react-select component
