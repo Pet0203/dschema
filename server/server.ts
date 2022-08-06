@@ -62,8 +62,8 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
     toEncrypt = toEncrypt.concat("&" + courses[i])
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
-
-  const response = {url: "http://localhost:5000/TB_Schema-" + encrypted + ".ics"};
+  //TODO: Important! Getting URL through header is only for dev purposes, replace with correct domain when in production.
+  const response = {url: req.get('Origin') + "/TB_Schema-" + encrypted + ".ics"};
   res.send(JSON.stringify(response));
 });
 
@@ -73,6 +73,6 @@ app.get('/TB_Schema-:id', (req: any, res: any) => {
       .send(cal.decodeURL(req.url.substr(1)));*/
 });
 
-app.listen(5000, () => {
-  console.log('The application is listening on port 5000!');
+app.listen(3001, () => {
+  console.log('The application is listening on port 3001!');
 });

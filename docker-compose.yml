@@ -1,16 +1,29 @@
 version: "3"
 services:
-  frontend:
+  client:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     build:
+      dockerfile: Dockerfile
       context: ./client
-      dockerfile: Dockerfile
     volumes:
-      - ./client/src:/app/src
-    ports:
-      - "3000:3000"
-  backend:
+      - /app/node_modules
+      - ./client:/app
+  api:
     build:
-      context: ./backend
       dockerfile: Dockerfile
+      context: "./server"
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
     ports:
-      - "5000:5000"
+      - "3003:80"

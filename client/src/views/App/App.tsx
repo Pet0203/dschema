@@ -100,7 +100,7 @@ function App() {
         courses: courses.map((course: ICourses) => course.value),
       };
 
-      fetch('http://localhost:5000/api/v1/getUrl/', {
+      fetch('/api/v1/getUrl/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
