@@ -11,9 +11,16 @@ function App() {
    * States for all the selectors
    */
   const [selectedGroup, setSelectedGroup] = useState<IGroups>();
-  const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
-  const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
-  const [checkedExam, setCheckedExam] = useState<boolean>(false);
+  const [selectedCourses, setSelectedCourses] = useState<ICourses[]>([
+    { value: 'ma', label: 'Matte' },
+    { value: 'fy', label: 'Fysik' },
+    { value: 'ke', label: 'Kemi' },
+    { value: 'pfy', label: 'Projektkurs Fysik' },
+    { value: 'pke', label: 'Projektkurs Kemi' },
+    { value: 'pro', label: 'Programmering' },
+  ]);
+  const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
+  const [checkedExam, setCheckedExam] = useState<boolean>(true);
   const [calendarUrl, setCalendarUrl] = useState<string>('');
 
   /**
@@ -148,12 +155,12 @@ function App() {
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} />
+                    <input name="mod1" type="checkbox" onClick={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                   <label className={styles.checkbox}>
                     Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} />
+                    <input name="mod2" type="checkbox" onClick={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                 </div>
