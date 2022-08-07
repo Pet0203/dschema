@@ -155,12 +155,12 @@ function App() {
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onClick={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
+                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                   <label className={styles.checkbox}>
                     Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onClick={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
+                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                 </div>
