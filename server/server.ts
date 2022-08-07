@@ -4,7 +4,7 @@ import * as fs from "fs";
 const express = require('express');
 const cors = require('cors');
 const CryptoJS = require("crypto-js");
-const cal = require('./Calendar');
+const cal = require('./calendar');
 
 const app = express();
 
@@ -64,7 +64,7 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
   //In dev:
   // const response = {url: req.get('Origin') + "/TB_Schema-" + encrypted + ".ics"};
-  const response = {url: req.protocol + "://tbschema.panivia.com/TB_Schema-" + encrypted + ".ics"};
+  const response = {url: "https://tbschema.panivia.com/TB_Schema-" + encrypted + ".ics"};
   res.send(JSON.stringify(response));
 });
 
