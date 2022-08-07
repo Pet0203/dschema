@@ -29,12 +29,16 @@
 }
 
 .container {
-  padding: 3rem 3rem;
+  padding: 1rem 0.5rem;
   color: $text;
 
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  @include breakpoint(sm) {
+    padding: 3rem 3rem;
+  }
 }
 
 .subtitle {
@@ -198,6 +202,23 @@
     border: none;
     outline: none;
     background-color: $primary;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  &__secondary_button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: $borderRadius;
+    border: 2px solid $primary;
+    outline: none;
+    background-color: $main;
+    text-decoration: none;
     color: #fff;
     cursor: pointer;
     display: flex;

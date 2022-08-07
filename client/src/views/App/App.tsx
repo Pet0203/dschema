@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import '../../scss/main.scss';
 import styles from './App.module.scss';
-import { Clipboard, Gift, Heart } from 'react-feather';
+import { Clipboard, Gift, Heart, Rss } from 'react-feather';
 import { IGroups } from '../../interfaces/IGroups';
 import { ICourses } from '../../interfaces/ICourses';
 
@@ -10,10 +10,17 @@ function App() {
   /**
    * States for all the selectors
    */
-  const [selectedGroup, setSelectedGroup] = useState<IGroups>();
-  const [selectedCourses, setSelectedCourses] = useState<ICourses[]>();
-  const [checkedLocation, setCheckedLocation] = useState<boolean>(false);
-  const [checkedExam, setCheckedExam] = useState<boolean>(false);
+  const [selectedGroup, setSelectedGroup] = useState<IGroups>({ value: '1', label: 'Grupp 1' });
+  const [selectedCourses, setSelectedCourses] = useState<ICourses[]>([
+    { value: 'ma', label: 'Matte' },
+    { value: 'fy', label: 'Fysik' },
+    { value: 'ke', label: 'Kemi' },
+    { value: 'pfy', label: 'Projektkurs Fysik' },
+    { value: 'pke', label: 'Projektkurs Kemi' },
+    { value: 'pro', label: 'Programmering' },
+  ]);
+  const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
+  const [checkedExam, setCheckedExam] = useState<boolean>(true);
   const [calendarUrl, setCalendarUrl] = useState<string>('');
 
   /**
@@ -113,11 +120,26 @@ function App() {
     }
   }
 
+  /**
+   * Handles the copy to clipboard functionality
+   */
   const copyUrlToClipboard = async () => {
     await navigator.clipboard.writeText(calendarUrl);
-    alert('Url copied');
+    alert('Kopierat till urklipp');
   };
 
+  /**
+   * Converts the calendar url to a calender link
+   */
+  let webCalUrl = calendarUrl.replace(/https/gi, 'webcal');
+
+  /**
+   * Runs at start and sets the .ical link
+   */
+  useEffect(() => {
+    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
+  }, [])
+  
   return (
     <div className={styles.app}>
       <section className={styles.section}>
@@ -148,12 +170,12 @@ function App() {
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
                     Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} />
+                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                   <label className={styles.checkbox}>
                     Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} />
+                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                 </div>
@@ -164,10 +186,14 @@ function App() {
                     Kalender URL
                   </h4>
                   <div className={[styles.items, styles['items--calendar_url']].join(' ')}>
-                    <button onClick={copyUrlToClipboard} className={styles.calendar_url__primary_button}>
+                    <a href={webCalUrl} target={'_blank'} className={styles.calendar_url__primary_button}>
+                      <Rss size={16} /> Prenumerera på kalender
+                    </a>
+                    <p>Eller kopiera kalender länk</p>
+                    <button onClick={copyUrlToClipboard} className={styles.calendar_url__secondary_button}>
                       <Clipboard size={16} /> Kopiera kalender url
                     </button>
-                    <p>OR manually copy the url</p>
+                    <p>Eller kopiera manuellt</p>
                     <input className={styles.calendar_url__url_input} type="text" readOnly={true} value={calendarUrl} />
                   </div>
                 </div>
