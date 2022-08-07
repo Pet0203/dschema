@@ -11,6 +11,9 @@
 # production
 /build
 
+# caledar file
+TimeEdit.ics
+
 # misc
 .DS_Store
 .env.local
