@@ -1,0 +1,30 @@
+# Generated with https://github.com/charleskorn/dependabot-config-generator
+# Re-generate this file with: npx github:charleskorn/dependabot-config-generator
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    schedule:
+      interval: monthly
+    directory: client
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    schedule:
+      interval: monthly
+    directory: server
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    schedule:
+      interval: monthly
+    directory: client
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    schedule:
+      interval: monthly
+    directory: nginx
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    schedule:
+      interval: monthly
+    directory: server
+    open-pull-requests-limit: 10
