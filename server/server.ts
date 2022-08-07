@@ -4,7 +4,7 @@ import * as fs from "fs";
 const express = require('express');
 const cors = require('cors');
 const CryptoJS = require("crypto-js");
-//const cal = require('./Calendar');
+const cal = require('./Calendar');
 
 const app = express();
 
@@ -67,10 +67,10 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
   res.send(JSON.stringify(response));
 });
 
-app.get('/TB_Schema-:id', (req: any, res: any) => {
-  /*res.status(200)
-      .attachment(req.url.substr(1))
-      .send(cal.decodeURL(req.url.substr(1)));*/
+app.get('/TB_Schema-*', (req: any, res: any) => {
+  res.status(200)
+      .attachment('tb_schema_subs.ics')
+      .send(cal.decodeURL(req.url.substr(1)));
 });
 
 app.listen(3001, () => {
