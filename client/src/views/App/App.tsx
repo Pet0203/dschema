@@ -10,7 +10,7 @@ function App() {
   /**
    * States for all the selectors
    */
-  const [selectedGroup, setSelectedGroup] = useState<IGroups>({ value: '1', label: 'Grupp 1' });
+  const [selectedGroup, setSelectedGroup] = useState<IGroups>();
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>([
     { value: 'ma', label: 'Matte' },
     { value: 'fy', label: 'Fysik' },
