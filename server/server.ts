@@ -35,7 +35,7 @@ function callTimeEdit() {
     console.log("TimeEdit cache error: ", err.message);
   });
   //TODO: Implement a better system for scheduling downloads?
-  setTimeout(callTimeEdit, 6*3600*1000); //6h
+  setTimeout(callTimeEdit, 2*3600*1000); //6h
 }
 //Start loop
 callTimeEdit()
@@ -62,8 +62,9 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
     toEncrypt = toEncrypt.concat("&" + courses[i])
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
-  //TODO: Important! Getting URL through header is only for dev purposes, replace with correct domain when in production.
-  const response = {url: req.get('Origin') + "/TB_Schema-" + encrypted + ".ics"};
+  //In dev:
+  // const response = {url: req.get('Origin') + "/TB_Schema-" + encrypted + ".ics"};
+  const response = {url: req.protocol + "://tbschema.panivia.com/TB_Schema-" + encrypted + ".ics"};
   res.send(JSON.stringify(response));
 });
 
