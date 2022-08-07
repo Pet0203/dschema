@@ -29,12 +29,16 @@
 }
 
 .container {
-  padding: 3rem 3rem;
+  padding: 1rem 0.5rem;
   color: $text;
 
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  @include breakpoint(sm) {
+    padding: 3rem 3rem;
+  }
 }
 
 .subtitle {
