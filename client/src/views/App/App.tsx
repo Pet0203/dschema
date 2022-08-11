@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import '../../scss/main.scss';
 import styles from './App.module.scss';
-import { Clipboard, Gift, Heart, Rss } from 'react-feather';
+import { Clipboard, Gift, Heart } from 'react-feather';
+import { Apple } from '../../assets/svgs/apple';
 import { IGroups } from '../../interfaces/IGroups';
 import { ICourses } from '../../interfaces/ICourses';
 
@@ -138,8 +139,8 @@ function App() {
    */
   useEffect(() => {
     getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
-  }, [])
-  
+  }, []);
+
   return (
     <div className={styles.app}>
       <section className={styles.section}>
@@ -187,7 +188,7 @@ function App() {
                   </h4>
                   <div className={[styles.items, styles['items--calendar_url']].join(' ')}>
                     <a href={webCalUrl} target={'_blank'} className={styles.calendar_url__primary_button}>
-                      <Rss size={16} /> Prenumerera på kalender
+                      <Apple /> Prenumerera på kalender
                     </a>
                     <p>Eller kopiera kalender länk</p>
                     <button onClick={copyUrlToClipboard} className={styles.calendar_url__secondary_button}>
