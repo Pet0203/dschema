@@ -65,6 +65,14 @@ function buildForGroup({group}: { group: string }) {
         // @ts-ignore
         comp.getAllSubcomponents('vevent').forEach(vevent => {
             if (vevent.getFirstProperty(check) != null) {
+                //Remove awful headers added by TimeEdit
+                const locData = vevent.getFirstProperty('location').getFirstValue();
+                if (locData.includes('Hus:') && locData.match(/(?<=Hus: )(.*?)(?=\s*\.)/) != null)
+                    vevent.getFirstProperty('location').setValue(locData.match(/(?<=Hus: )(.*?)(?=\s*\.)/)[0]);
+                const sumData = vevent.getFirstProperty('summary').getFirstValue();
+                if (sumData.includes('Kursnamn: ') && sumData.match(/(?<=Kursnamn: )(.*?)(?=\s*,)/) != null)
+                    vevent.getFirstProperty('summary').setValue(sumData.match(/(?<=Kursnamn: )(.*?)(?=\s*,)/)[0]);
+
                 var desc = vevent.getFirstProperty(check).getFirstValue();
                 if (desc.includes('ZBASS-1.') && (!desc.includes(group) || desc.charAt(desc.indexOf(group) + group.length) === '0'))
                     comp.removeSubcomponent(vevent);
