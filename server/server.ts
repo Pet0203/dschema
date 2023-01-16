@@ -16,8 +16,8 @@ function callTimeEdit() {
     fs.truncate('./TimeEdit.ics', 0, function () {
     })
   } catch (e) {}
-  //This link needs an occasional update! In use: 2022-08-01 to 2023-01-15
-  https.get('https://cloud.timeedit.net/chalmers/web/public/ri6YZ069Z35Z6gQ2Y75505005645y4Y0nQ68X06Qg77660Q03.ics', (res) => {
+  //This link needs an occasional update! In use: 2023-01-16 to 2023-06-09
+  https.get('https://cloud.timeedit.net/chalmers/web/public/ri.ics?sid=3&objects=197003.194&p=20230116.x%2C20230609.x&e=230116&enol=t', (res) => {
 
     // Open file in local filesystem
     const file = fs.createWriteStream(`TimeEdit.ics`);
