@@ -133,20 +133,23 @@ function getCourse(course: string){
     const col: any[] = [];
     // @ts-ignore
     comp.getAllSubcomponents('vevent').forEach(vevent => {
+        var desc;
 
-        if (vevent.getFirstProperty('summary') != null) {
-            var desc = vevent.getFirstProperty('summary').getFirstValue();
-            if (desc.includes(coursemap.get(course))) {
-                col.push(vevent);
-            } else if (course === 'pro') { //Special case for programming which is in the same course as MVE426
-                desc = vevent.getFirstProperty('description').getFirstValue();
-                if (desc.includes('Programming')) {
+        if (vevent.getFirstProperty('description') != null) { //Special case for programming which is in the same course as MVE426
+            desc = vevent.getFirstProperty('description').getFirstValue();
+            if (desc.includes('Programming')) {
+                if (course === 'pro')
                     col.push(vevent);
-                }
+                else
+                    return;
             }
-
         }
-    })
+        if (vevent.getFirstProperty('summary') != null) {
+            desc = vevent.getFirstProperty('summary').getFirstValue();
+            if (desc.includes(coursemap.get(course)))
+                col.push(vevent);
+        }
+    });
     return col;
 }
 
