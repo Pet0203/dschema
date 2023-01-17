@@ -36,7 +36,7 @@ function build(){
         rebuild()
         return comp;
     }
-    let allCourses = ['ma', 'ke', 'fy'];
+    let allCourses = ['ma', 'ke', 'fy', 'pfy', 'pke', 'pro'];
     let toRemove = allCourses.filter(function (value) {
         return !courses.includes(value);
     });
@@ -87,6 +87,17 @@ function buildForGroup({group}: { group: string }) {
                     if (firstGroup > groupNum || lastGroup < groupNum)
                         comp.removeSubcomponent(vevent);
                 }
+                if (desc.match(/[0-9]-[0-9]+/) !== null) {
+                    //Build interval
+                    const groupComponent = desc.match(/[0-9]-[0-9]+/)[0];
+                    const firstGroup = parseInt(groupComponent.substring(0, groupComponent.indexOf('-')));
+                    const lastGroup = parseInt(groupComponent.substring(groupComponent.indexOf('-') + 1));
+                    //Get group number
+                    const groupNum = parseInt(group.substring(8))
+                    //Remove if outside of interval
+                    if (firstGroup > groupNum || lastGroup < groupNum)
+                        comp.removeSubcomponent(vevent);
+                }
             }
         });
     })
@@ -114,7 +125,9 @@ function getCourse(course: string){
     const coursemap = new Map([
         ['ma', 'MVE426'],
         ['fy', 'LMA538'],
-        ['ke', 'LET924']
+        ['ke', 'LET924'],
+        ['pfy', 'MVE285'],
+        ['pke', 'KBT185']
     ]);
 
     const col: any[] = [];
@@ -125,6 +138,11 @@ function getCourse(course: string){
             var desc = vevent.getFirstProperty('summary').getFirstValue();
             if (desc.includes(coursemap.get(course))) {
                 col.push(vevent);
+            } else if (course === 'pro') { //Special case for programming which is in the same course as MVE426
+                desc = vevent.getFirstProperty('description').getFirstValue();
+                if (desc.includes('Programming')) {
+                    col.push(vevent);
+                }
             }
 
         }
