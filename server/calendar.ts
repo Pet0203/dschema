@@ -13,7 +13,7 @@ module.exports.decodeURL = decodeURL;
 function decodeURL(url: string) {
     if (url.includes("D_Schema-") && url.includes(".ics")) {
         //Isolate AES-128
-        const encrypted = url.substring(url.indexOf("D_Schema-") + 10, url.indexOf(".ics"))
+        const encrypted = url.substring(url.indexOf("D_Schema-") + 9, url.indexOf(".ics"))
         //Decrypt to compressed style
         const decrypted = CryptoJS.AES.decrypt(encrypted, "13MONKELOVESBANANA37");
         //Uncompress
@@ -24,12 +24,12 @@ function decodeURL(url: string) {
             modExam = !!Number.parseInt(infosplit[2]);
             courses = infosplit.slice(3);
         } else
-            return false;
+            return "Error: Invalid URL";
         iCal();
         buildForGroup({ group: group });
         return build().toString();
     }
-    return false;
+    return "Error: Invalid URL";
 }
 
 function build() {
