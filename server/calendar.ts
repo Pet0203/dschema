@@ -75,7 +75,7 @@ function buildForGroup({ group }: { group: string }) {
 
             groupComponent = desc.match(/Grupp ([A-G])/)
             if (groupComponent != null && groupComponent.length == 2) {
-                if (groupComponent[0] != groupChar)
+                if (groupComponent[1] != groupChar)
                     comp.removeSubcomponent(vevent);
             }
         }
