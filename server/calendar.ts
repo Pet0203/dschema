@@ -60,27 +60,27 @@ function iCal() {
 
 //Filters out events not relevant to selected group
 function buildForGroup({ group }: { group: string }) {
-    const toCheck = ['description', 'summary'];
-    toCheck.forEach(function (check) {
-        // @ts-ignore
-        comp.getAllSubcomponents('vevent').forEach(vevent => {
-            if (vevent.getFirstProperty(check) != null) {
-                var desc = vevent.getFirstProperty(check).getFirstValue();
-                if (desc.includes('Grupp ') && (!desc.includes(group) || desc.charAt(desc.indexOf(group) + group.length) === '0'))
+    // @ts-ignore
+    const groupChar = group.charAt(group.length - 1);
+    comp.getAllSubcomponents('vevent').forEach((vevent: any) => {
+        if (vevent.getFirstProperty('description') != null) {
+            var desc = vevent.getFirstProperty('description').getFirstValue();
+            let groupComponent = desc.match(/Grupp ([A-G]) och ([A-G])/);
+            if (groupComponent != null && groupComponent.length == 3) {
+                if (groupComponent[1] != groupChar && groupComponent[2] != groupChar) {
                     comp.removeSubcomponent(vevent);
-                if (desc.match(/Grupp [A-G]/) !== null) {
-                    //Build interval
-                    const groupComponent = desc.match(/[A-G]/)[0];
-                    const evGroup = groupComponent.charAt(groupComponent.length - 1);
-                    //Get group number
-                    const groupChar = group.charAt(group.length - 1);
-                    //Remove if outside of interval
-                    if (evGroup == groupChar)
-                        comp.removeSubcomponent(vevent);
                 }
+                return;
             }
-        });
-    })
+
+            groupComponent = desc.match(/Grupp ([A-G])/)
+            if (groupComponent != null && groupComponent.length == 2) {
+                if (groupComponent[0] != groupChar)
+                    comp.removeSubcomponent(vevent);
+            }
+        }
+    }
+    );
 
 }
 
