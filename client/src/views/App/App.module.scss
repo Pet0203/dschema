@@ -286,6 +286,15 @@
     display: flex;
     gap: 0.4rem;
   }
+
+  &__disclaimer {
+    margin-top: 0.8rem;
+    color: #cb1317;
+
+    span {
+      font-weight: bold;
+    }
+  }
 }
 
 @keyframes tbk_colors {
