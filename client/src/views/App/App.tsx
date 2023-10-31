@@ -13,12 +13,10 @@ function App() {
    */
   const [selectedGroup, setSelectedGroup] = useState<IGroups>();
   const [selectedCourses, setSelectedCourses] = useState<ICourses[]>([
-    { value: 'ma', label: 'Matte' },
-    { value: 'fy', label: 'Fysik' },
-    { value: 'ke', label: 'Kemi' },
-    { value: 'pfy', label: 'Projektkurs Fysik' },
-    { value: 'pke', label: 'Projektkurs Kemi' },
-    { value: 'pro', label: 'Programmering' },
+    { value: 'EDA452', label: 'Grundläggande datorteknik' },
+    { value: 'TDA555', label: 'Intro till funktionell programmering' },
+    { value: 'TMV211', label: 'Inledande diskret matematik' },
+    { value: 'DAT044', label: 'Intro till OOP' }
   ]);
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
@@ -30,16 +28,13 @@ function App() {
    * @param {string} label
    */
   const groups: IGroups[] = [
-    { value: '1', label: 'Grupp 1' },
-    { value: '2', label: 'Grupp 2' },
-    { value: '3', label: 'Grupp 3' },
-    { value: '4', label: 'Grupp 4' },
-    { value: '5', label: 'Grupp 5' },
-    { value: '6', label: 'Grupp 6' },
-    { value: '7', label: 'Grupp 7' },
-    { value: '8', label: 'Grupp 8' },
-    { value: '9', label: 'Grupp 9' },
-    { value: '10', label: 'Grupp 10' },
+    { value: 'A', label: 'Grupp A' },
+    { value: 'B', label: 'Grupp B' },
+    { value: 'C', label: 'Grupp C' },
+    { value: 'D', label: 'Grupp D' },
+    { value: 'E', label: 'Grupp E' },
+    { value: 'F', label: 'Grupp F' },
+    { value: 'G', label: 'Grupp G' }
   ];
 
   /**
@@ -48,12 +43,10 @@ function App() {
    * @param {string} label    Value used as display text
    */
   const courses: ICourses[] = [
-    { value: 'ma', label: 'Matte' },
-    { value: 'fy', label: 'Fysik' },
-    { value: 'ke', label: 'Kemi' },
-    { value: 'pfy', label: 'Projektkurs Fysik' },
-    { value: 'pke', label: 'Projektkurs Kemi' },
-    { value: 'pro', label: 'Programmering' },
+    { value: 'EDA452', label: 'Grundläggande datorteknik' },
+    { value: 'TDA555', label: 'Intro till funktionell programmering' },
+    { value: 'TMV211', label: 'Inledande diskret matematik' },
+    { value: 'DAT044', label: 'Intro till OOP' }
   ];
 
   /**
@@ -145,13 +138,13 @@ function App() {
     <div className={styles.app}>
       <section className={styles.section}>
         <div className={styles.container}>
-          <h2 className={styles.title}>TB Schema | Prenumerera</h2>
+          <h2 className={styles.title}>DSchema-1 | Prenumerera</h2>
           <div>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj din TB undergrupp">
+            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj din GruDat undergrupp">
               Välj grupp
             </h4>
             <div className={styles.items}>
-              <Select className={styles.react_select_container} placeholder="Välj undergrupp" defaultValue={selectedGroup} onChange={handleGroupChange} options={groups} />
+              <Select className={styles.react_select_container} placeholder="Välj GruDat undergrupp" defaultValue={selectedGroup} onChange={handleGroupChange} options={groups} />
             </div>
           </div>
           {selectedGroup && selectedGroup.value && (
@@ -165,17 +158,17 @@ function App() {
                 </div>
               </div>
               <div>
-                <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip='Lägger till "Lindholmen" eller "Johanneberg" i platsfältet" '>
+                <h4 className={[styles.subtitle, styles.tooltip].join(' ')}>
                   Modifikationer
                 </h4>
                 <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
                   <label className={styles.checkbox}>
-                    Förbättra platsfältet
+                    Förbättra titlar
                     <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
                   <label className={styles.checkbox}>
-                    Inkludera tentor och anmällan
+                    Inkludera tentor och anmälan
                     <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
                     <span className={styles.checkbox__checkmark} />
                   </label>
@@ -205,13 +198,14 @@ function App() {
             <p className={styles.credits__made_with}>
               Made with
               <Heart className={styles['credits__made_with--heart']} size={16} />
-              in Gothenburg, Sweden
+              in Gothenburg, Sweden by: Whupper & PEZ
             </p>
             <p>En slant för arbetet skadar aldrig!</p>
             <a className={styles.credits__paypal} href="https://paypal.me/memgod">
               <Gift size={16} />
               PayPal
             </a>
+            <p>DISCLAIMER: Vi tar ej ansvar för missade lektioner och tentor orsakade av eventuella buggar på denna sidan.</p>
           </div>
         </div>
       </section>

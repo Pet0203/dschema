@@ -15,9 +15,9 @@ function callTimeEdit() {
   try {
     fs.truncate('./TimeEdit.ics', 0, function () {
     })
-  } catch (e) {}
-  //This link needs an occasional update! In use: 2023-01-16 to 2023-06-09
-  https.get('https://cloud.timeedit.net/chalmers/web/public/ri.ics?sid=3&objects=197003.194&p=20230116.x%2C20230609.x&e=230116&enol=t', (res) => {
+  } catch (e) { }
+  //Now + 12 weeks
+  https.get('https://cloud.timeedit.net/chalmers/web/public/ri6Y73XQZ65Zv1Q1Z05f70Y7554Yy4nQ6Q58.ics', (res) => {
 
     // Open file in local filesystem
     const file = fs.createWriteStream(`TimeEdit.ics`);
@@ -35,7 +35,7 @@ function callTimeEdit() {
     console.log("TimeEdit cache error: ", err.message);
   });
   //TODO: Implement a better system for scheduling downloads?
-  setTimeout(callTimeEdit, 2*3600*1000); //6h
+  setTimeout(callTimeEdit, 2 * 3600 * 1000); //6h
 }
 //Start loop
 callTimeEdit()
@@ -63,15 +63,15 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
   //In dev:
-  // const response = {url: req.get('Origin') + "/TB_Schema-" + encrypted + ".ics"};
-  const response = {url: "https://tbschema.panivia.com/TB_Schema-" + encrypted + ".ics"};
+  //const response = {url: req.get('Origin') + "/D_Schema-" + encrypted + ".ics"};
+  const response = { url: "https://dschema.panivia.com/D_Schema-" + encrypted + ".ics" };
   res.send(JSON.stringify(response));
 });
 
-app.get('/TB_Schema-*', (req: any, res: any) => {
+app.get('/D_Schema-*', (req: any, res: any) => {
   res.status(200)
-      .attachment('tb_schema_subs.ics')
-      .send(cal.decodeURL(req.url.substr(1)));
+    .attachment('d_schema_subs.ics')
+    .send(cal.decodeURL(req.url.substr(1)));
 });
 
 app.listen(3001, () => {
