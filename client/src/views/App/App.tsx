@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { IGroups } from "../../interfaces/IGroups";
-import { ICourses } from "../../interfaces/ICourses";
 import {
   Button,
   Card,
@@ -55,30 +53,30 @@ function App() {
       }),
     ])
   );
-  const [selectedGroup, setSelectedGroup] = useState(new Set([]));
+  const [selectedGroup, setSelectedGroup] = useState<Set<string>>(new Set());
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
   const [calendarUrl, setCalendarUrl] = useState<string>("");
 
   /**
    * Calls the API to get the .ical link
-   * @param {IGroups} group     The selected group
-   * @param {ICourses} courses  The selected courses
+   * @param {string} group     The selected group
+   * @param {string[]} courses  The selected courses
    * @param {boolean} location  State of location checkbox
    * @param {boolean} exam      State if exams checkbox
    */
   async function getIcalLink(
-    group: IGroups,
-    courses: ICourses[],
+    group: string,
+    courses: string[],
     location: boolean,
     exam: boolean
   ) {
     if (group && courses && courses.length > 0) {
       const request = {
-        group: group.value,
+        group: group,
         modLocation: location,
         modExam: exam,
-        courses: courses.map((course: ICourses) => course.value),
+        courses: courses.map((course) => course),
       };
 
       fetch("/api/v1/getUrl/", {
@@ -111,15 +109,13 @@ function App() {
    * Sets the .ical link
    */
   useEffect(() => {
-    const theCourses = courses.filter((course) =>
-      selectedCourses.has(course.value)
-    );
-    getIcalLink(
-      Array.from(selectedGroup)[0] as IGroups,
-      theCourses as ICourses[],
-      checkedLocation as boolean,
-      checkedExam as boolean
-    );
+    const theCources = Array.from(selectedCourses);
+
+    const group = selectedCourses.has("EDA452")
+      ? selectedGroup.values().next().value
+      : "A";
+
+    getIcalLink(group, theCources, checkedLocation, checkedExam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCourses, selectedGroup, checkedLocation, checkedExam]);
 
@@ -231,62 +227,63 @@ function App() {
             {
               // If the user has selected EDA452, show options only if the user has selected a group, but if the user has not selected EDA452, show the options
               ((selectedCourses.has("EDA452") && selectedGroup.size > 0) ||
-                !selectedCourses.has("EDA452")) && (
-                <>
-                  <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
-                    <label className="block text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
-                      Modifications
-                    </label>
-                    <div className="flex flex-col gap-2">
-                      <Switch
-                        isSelected={checkedExam}
-                        onValueChange={setCheckedExam}
-                      >
-                        Improved titles
-                      </Switch>
-                      <Switch
-                        isSelected={checkedLocation}
-                        onValueChange={setCheckedLocation}
-                      >
-                        Include exams and signups
-                      </Switch>
+                !selectedCourses.has("EDA452")) &&
+                selectedCourses.size > 0 && (
+                  <>
+                    <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
+                      <label className="block text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
+                        Modifications
+                      </label>
+                      <div className="flex flex-col gap-2">
+                        <Switch
+                          isSelected={checkedExam}
+                          onValueChange={setCheckedExam}
+                        >
+                          Improved titles
+                        </Switch>
+                        <Switch
+                          isSelected={checkedLocation}
+                          onValueChange={setCheckedLocation}
+                        >
+                          Include exams and signups
+                        </Switch>
+                      </div>
                     </div>
-                  </div>
-                  <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
-                    <label className="text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
-                      Calendar URL
-                    </label>
-                    <div className="flex flex-col gap-2 w-full">
-                      <Button
-                        color="primary"
-                        as={Link}
-                        href={webCalUrl}
-                        target="_blank"
-                      >
-                        <Apple />
-                        Subscribe to calendar
-                      </Button>
-                      <p className="text-small mx-auto">or</p>
-                      <Button
-                        variant="flat"
-                        color="primary"
-                        onClick={copyUrlToClipboard}
-                      >
-                        <Clipboard className="w-4 h-4" />
-                        Copy calendar URL to clipboard
-                      </Button>
-                      <p className="text-small mx-auto">or</p>
-                      <Input
-                        isReadOnly
-                        type="text"
-                        variant="bordered"
-                        labelPlacement="outside"
-                        value={calendarUrl}
-                      />
+                    <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
+                      <label className="text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
+                        Calendar URL
+                      </label>
+                      <div className="flex flex-col gap-2 w-full">
+                        <Button
+                          color="primary"
+                          as={Link}
+                          href={webCalUrl}
+                          target="_blank"
+                        >
+                          <Apple />
+                          Subscribe to calendar
+                        </Button>
+                        <p className="text-small mx-auto">or</p>
+                        <Button
+                          variant="flat"
+                          color="primary"
+                          onClick={copyUrlToClipboard}
+                        >
+                          <Clipboard className="w-4 h-4" />
+                          Copy calendar URL to clipboard
+                        </Button>
+                        <p className="text-small mx-auto">or</p>
+                        <Input
+                          isReadOnly
+                          type="text"
+                          variant="bordered"
+                          labelPlacement="outside"
+                          value={calendarUrl}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )
+                  </>
+                )
             }
           </CardBody>
           <Divider />
@@ -308,6 +305,13 @@ function App() {
               <PiggyBank className="w-4 h-4 text-primary" />
               Donate using PayPal
             </Button>
+            <Link
+              isExternal
+              href="https://github.com/Pet0203/dschema"
+              showAnchorIcon
+            >
+              Github Repository
+            </Link>
           </CardFooter>
         </Card>
       </div>
