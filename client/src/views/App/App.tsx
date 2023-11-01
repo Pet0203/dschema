@@ -1,96 +1,64 @@
-import { useState, useEffect } from 'react';
-import Select from 'react-select';
-import '../../scss/main.scss';
-import styles from './App.module.scss';
-import { Clipboard, Gift, Heart } from 'react-feather';
-import { Apple } from '../../assets/svgs/apple';
-import { IGroups } from '../../interfaces/IGroups';
-import { ICourses } from '../../interfaces/ICourses';
+import { useState, useEffect } from "react";
+import { IGroups } from "../../interfaces/IGroups";
+import { ICourses } from "../../interfaces/ICourses";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Chip,
+  Divider,
+  Input,
+  Link,
+  Select,
+  SelectItem,
+  Switch,
+} from "@nextui-org/react";
+
+import { Apple } from "../../assets/svgs/apple";
+import { Clipboard, Heart, PiggyBank } from "lucide-react";
 
 function App() {
+  const courses = [
+    {
+      label: "Inledande diskret matematik",
+      value: "TMV211",
+      description: "lp1",
+    },
+    {
+      label: "Intro till funktionell programmering",
+      value: "TDA555",
+      description: "lp1",
+    },
+    { label: "Intro till OOP", value: "DAT044", description: "lp2" },
+    { label: "Grundläggande datorteknik", value: "EDA452", description: "lp2" },
+  ];
+
+  const groups = [
+    { value: "A", label: "Group A" },
+    { value: "B", label: "Group B" },
+    { value: "C", label: "Group C" },
+    { value: "D", label: "Group D" },
+    { value: "E", label: "Group E" },
+    { value: "F", label: "Group F" },
+    { value: "G", label: "Group G" },
+  ];
+
   /**
    * States for all the selectors
    */
-  const [selectedGroup, setSelectedGroup] = useState<IGroups>();
-  const [selectedCourses, setSelectedCourses] = useState<ICourses[]>([
-    { value: 'ma', label: 'Matte' },
-    { value: 'fy', label: 'Fysik' },
-    { value: 'ke', label: 'Kemi' },
-    { value: 'pfy', label: 'Projektkurs Fysik' },
-    { value: 'pke', label: 'Projektkurs Kemi' },
-    { value: 'pro', label: 'Programmering' },
-  ]);
+  const [selectedCourses, setSelectedCourses] = useState(
+    new Set([
+      ...courses.map((course) => {
+        return course.value;
+      }),
+    ])
+  );
+  const [selectedGroup, setSelectedGroup] = useState(new Set([]));
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
-  const [calendarUrl, setCalendarUrl] = useState<string>('');
-
-  /**
-   * Group options for react-select component
-   * @param {string} value
-   * @param {string} label
-   */
-  const groups: IGroups[] = [
-    { value: '1', label: 'Grupp 1' },
-    { value: '2', label: 'Grupp 2' },
-    { value: '3', label: 'Grupp 3' },
-    { value: '4', label: 'Grupp 4' },
-    { value: '5', label: 'Grupp 5' },
-    { value: '6', label: 'Grupp 6' },
-    { value: '7', label: 'Grupp 7' },
-    { value: '8', label: 'Grupp 8' },
-    { value: '9', label: 'Grupp 9' },
-    { value: '10', label: 'Grupp 10' },
-  ];
-
-  /**
-   * Group options for react-select component
-   * @param {string} value    Value used for the option
-   * @param {string} label    Value used as display text
-   */
-  const courses: ICourses[] = [
-    { value: 'ma', label: 'Matte' },
-    { value: 'fy', label: 'Fysik' },
-    { value: 'ke', label: 'Kemi' },
-    { value: 'pfy', label: 'Projektkurs Fysik' },
-    { value: 'pke', label: 'Projektkurs Kemi' },
-    { value: 'pro', label: 'Programmering' },
-  ];
-
-  /**
-   * Handles the change of the react-select component for the group
-   * @param {IGroups | IGroups[] | null} selected§    Value of the selected group
-   */
-  const handleGroupChange = (selected?: IGroups | IGroups[] | null) => {
-    setSelectedGroup(selected as IGroups);
-    getIcalLink(selected as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
-  };
-
-  /**
-   * Handles the change of the react-select component for the courses
-   * @param {ICourses | ICourses[] | null} selected   Value of the selected course
-   */
-  const handleCoursesChange = (selected: readonly ICourses[]) => {
-    setSelectedCourses(selected as ICourses[]);
-    getIcalLink(selectedGroup as IGroups, selected as ICourses[], checkedLocation as boolean, checkedExam as boolean);
-  };
-
-  /**
-   * Handles the change for the location checkbox
-   * @param {boolean} checked   State of the location checkbox
-   */
-  const handleLocationChecked = (checked: boolean) => {
-    setCheckedLocation(checked);
-    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checked as boolean, checkedExam as boolean);
-  };
-
-  /**
-   * Handles the change for the exam checkbox
-   * @param {boolean} checked   State of the exams checkbox
-   */
-  const handleExamsChecked = (checked: boolean) => {
-    setCheckedExam(checked);
-    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checked as boolean);
-  };
+  const [calendarUrl, setCalendarUrl] = useState<string>("");
 
   /**
    * Calls the API to get the .ical link
@@ -99,7 +67,12 @@ function App() {
    * @param {boolean} location  State of location checkbox
    * @param {boolean} exam      State if exams checkbox
    */
-  async function getIcalLink(group: IGroups, courses: ICourses[], location: boolean, exam: boolean) {
+  async function getIcalLink(
+    group: IGroups,
+    courses: ICourses[],
+    location: boolean,
+    exam: boolean
+  ) {
     if (group && courses && courses.length > 0) {
       const request = {
         group: group.value,
@@ -108,10 +81,10 @@ function App() {
         courses: courses.map((course: ICourses) => course.value),
       };
 
-      fetch('/api/v1/getUrl/', {
-        method: 'POST',
+      fetch("/api/v1/getUrl/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
       })
@@ -126,95 +99,218 @@ function App() {
    */
   const copyUrlToClipboard = async () => {
     await navigator.clipboard.writeText(calendarUrl);
-    alert('Kopierat till urklipp');
+    alert("Copied to clipboard!");
   };
 
   /**
    * Converts the calendar url to a calender link
    */
-  let webCalUrl = calendarUrl.replace(/https/gi, 'webcal');
+  let webCalUrl = calendarUrl.replace(/https/gi, "webcal");
 
   /**
-   * Runs at start and sets the .ical link
+   * Sets the .ical link
    */
   useEffect(() => {
-    getIcalLink(selectedGroup as IGroups, selectedCourses as ICourses[], checkedLocation as boolean, checkedExam as boolean);
-  }, []);
+    const theCourses = courses.filter((course) =>
+      selectedCourses.has(course.value)
+    );
+    getIcalLink(
+      Array.from(selectedGroup)[0] as IGroups,
+      theCourses as ICourses[],
+      checkedLocation as boolean,
+      checkedExam as boolean
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCourses, selectedGroup, checkedLocation, checkedExam]);
 
   return (
-    <div className={styles.app}>
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>TB Schema | Prenumerera</h2>
-          <div>
-            <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj din TB undergrupp">
-              Välj grupp
-            </h4>
-            <div className={styles.items}>
-              <Select className={styles.react_select_container} placeholder="Välj undergrupp" defaultValue={selectedGroup} onChange={handleGroupChange} options={groups} />
+    <div className="container p-4 mx-auto">
+      <div className="max-w-xl mx-auto">
+        <Card>
+          <CardHeader className="p-6 flex flex-col items-start gap-2">
+            <div>
+              <h1 className="text-3xl">DSchema</h1>
+              <p className="text-foreground-500">by Whupper and PEZ</p>
             </div>
-          </div>
-          {selectedGroup && selectedGroup.value && (
-            <>
-              <div>
-                <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Välj de kurser du vill inkludera i schemat">
-                  Välj kurser
-                </h4>
-                <div className={styles.items}>
-                  <Select className={styles.react_select_container} isMulti closeMenuOnSelect={false} defaultValue={selectedCourses} onChange={handleCoursesChange} options={courses} />
-                </div>
-              </div>
-              <div>
-                <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip='Lägger till "Lindholmen" eller "Johanneberg" i platsfältet" '>
-                  Modifikationer
-                </h4>
-                <div className={[styles.items, styles['items--checkboxes']].join(' ')}>
-                  <label className={styles.checkbox}>
-                    Förbättra platsfältet
-                    <input name="mod1" type="checkbox" onChange={() => handleLocationChecked(!checkedLocation)} checked={checkedLocation} />
-                    <span className={styles.checkbox__checkmark} />
-                  </label>
-                  <label className={styles.checkbox}>
-                    Inkludera tentor och anmällan
-                    <input name="mod2" type="checkbox" onChange={() => handleExamsChecked(!checkedExam)} checked={checkedExam} />
-                    <span className={styles.checkbox__checkmark} />
-                  </label>
-                </div>
-              </div>
-              {selectedCourses && selectedCourses.length !== 0 && (
-                <div className={styles.calendar_url}>
-                  <h4 className={[styles.subtitle, styles.tooltip].join(' ')} data-tooltip="Brukar gå att klistra in i de flesta kalender apparna">
-                    Kalender URL
-                  </h4>
-                  <div className={[styles.items, styles['items--calendar_url']].join(' ')}>
-                    <a href={webCalUrl} target={'_blank'} className={styles.calendar_url__primary_button}>
-                      <Apple /> Prenumerera på kalender
-                    </a>
-                    <p>Eller kopiera kalender länk</p>
-                    <button onClick={copyUrlToClipboard} className={styles.calendar_url__secondary_button}>
-                      <Clipboard size={16} /> Kopiera kalender url
-                    </button>
-                    <p>Eller kopiera manuellt</p>
-                    <input className={styles.calendar_url__url_input} type="text" readOnly={true} value={calendarUrl} />
+            <p className="text-primary">
+              DISCLAIMER! We do not take responsibility for missed lectures and
+              exams caused by any bugs on this page.
+            </p>
+          </CardHeader>
+          <Divider />
+          <CardBody className="p-6 flex gap-8">
+            <Select
+              label="Select courses to subscribe to"
+              selectionMode="multiple"
+              placeholder="Select a course"
+              selectedKeys={selectedCourses}
+              variant="bordered"
+              labelPlacement="outside"
+              isMultiline
+              onSelectionChange={setSelectedCourses as any}
+              classNames={{
+                trigger: "min-h-unit-12 py-2",
+              }}
+              renderValue={() => {
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    {Array.from(selectedCourses).map((selectedItem) => (
+                      <Chip
+                        key={selectedItem}
+                        className="bg-primary text-primary-foreground"
+                      >
+                        {
+                          courses.find(
+                            (course) => course.value === selectedItem
+                          )?.label
+                        }
+                      </Chip>
+                    ))}
                   </div>
-                </div>
-              )}
-            </>
-          )}
-          <div className={styles.credits}>
-            <p className={styles.credits__made_with}>
-              Made with
-              <Heart className={styles['credits__made_with--heart']} size={16} />
+                );
+              }}
+            >
+              {courses.map((course) => (
+                <SelectItem key={course.value} textValue={course.label}>
+                  <div className="flex gap-2 items-center">
+                    <div className="flex flex-col">
+                      <span className="text-small font-bold">
+                        {course.label}
+                      </span>
+                      <span className="text-tiny text-default-500">
+                        {course.value}-{course.description}
+                      </span>
+                    </div>
+                  </div>
+                </SelectItem>
+              ))}
+            </Select>
+            {selectedCourses.has("EDA452") && (
+              <Select
+                label="Select GruDat lab group"
+                placeholder="Select group"
+                selectedKeys={selectedGroup}
+                variant="bordered"
+                labelPlacement="outside"
+                isMultiline
+                onSelectionChange={setSelectedGroup as any}
+                classNames={{
+                  trigger: "min-h-unit-12 py-2",
+                }}
+                renderValue={() => {
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from(selectedGroup).map((selectedItem) => (
+                        <Chip
+                          key={selectedItem}
+                          className="bg-primary text-primary-foreground"
+                        >
+                          {
+                            groups.find((group) => group.value === selectedItem)
+                              ?.label
+                          }
+                        </Chip>
+                      ))}
+                    </div>
+                  );
+                }}
+              >
+                {groups.map((group) => (
+                  <SelectItem key={group.value} textValue={group.label}>
+                    <div className="flex gap-2 items-center">
+                      <div className="flex flex-col">
+                        <span className="text-small font-bold">
+                          {group.label}
+                        </span>
+                      </div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
+            {
+              // If the user has selected EDA452, show options only if the user has selected a group, but if the user has not selected EDA452, show the options
+              ((selectedCourses.has("EDA452") && selectedGroup.size > 0) ||
+                !selectedCourses.has("EDA452")) && (
+                <>
+                  <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
+                    <label className="block text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
+                      Modifications
+                    </label>
+                    <div className="flex flex-col gap-2">
+                      <Switch
+                        isSelected={checkedExam}
+                        onValueChange={setCheckedExam}
+                      >
+                        Improved titles
+                      </Switch>
+                      <Switch
+                        isSelected={checkedLocation}
+                        onValueChange={setCheckedLocation}
+                      >
+                        Include exams and signups
+                      </Switch>
+                    </div>
+                  </div>
+                  <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
+                    <label className="text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">
+                      Calendar URL
+                    </label>
+                    <div className="flex flex-col gap-2 w-full">
+                      <Button
+                        color="primary"
+                        as={Link}
+                        href={webCalUrl}
+                        target="_blank"
+                      >
+                        <Apple />
+                        Subscribe to calendar
+                      </Button>
+                      <p className="text-small mx-auto">or</p>
+                      <Button
+                        variant="flat"
+                        color="primary"
+                        onClick={copyUrlToClipboard}
+                      >
+                        <Clipboard className="w-4 h-4" />
+                        Copy calendar URL to clipboard
+                      </Button>
+                      <p className="text-small mx-auto">or</p>
+                      <Input
+                        isReadOnly
+                        type="text"
+                        variant="bordered"
+                        labelPlacement="outside"
+                        value={calendarUrl}
+                      />
+                    </div>
+                  </div>
+                </>
+              )
+            }
+          </CardBody>
+          <Divider />
+          <CardFooter className="p-6 flex flex-col items-center gap-2">
+            <p className="flex items-center gap-1">
+              Made with{" "}
+              <Heart className="w-4 h-4 fill-primary text-primary animate-pulse inline" />{" "}
               in Gothenburg, Sweden
             </p>
-            <p>En slant för arbetet skadar aldrig!</p>
-            <a className={styles.credits__paypal} href="https://paypal.me/memgod">
-              <Gift size={16} />
-              PayPal
-            </a>
-          </div>
-        </div>
-      </section>
+            <p>A small donation never hurts :)</p>
+            <Button
+              color="primary"
+              variant="flat"
+              as={Link}
+              href="https://paypal.me/memgod"
+              target="_blank"
+              className="flex items-center gap-1"
+            >
+              <PiggyBank className="w-4 h-4 text-primary" />
+              Donate using PayPal
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
