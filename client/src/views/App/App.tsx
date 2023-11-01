@@ -219,7 +219,7 @@ function App() {
                   )}
                 >
                   <label className={styles.checkbox}>
-                    Improved titles ( Cource | Type )
+                    Improved titles ( Course | Type )
                     <input
                       name="mod1"
                       type="checkbox"
@@ -259,7 +259,7 @@ function App() {
                       target={"_blank"}
                       className={styles.calendar_url__primary_button}
                     >
-                      <Apple /> Subscripe to calendar
+                      <Apple /> Subscribe to calendar
                     </a>
                     <p>or copy the calendar url</p>
                     <button
