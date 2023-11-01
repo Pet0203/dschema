@@ -10,6 +10,7 @@ import {
   Chip,
   Divider,
   Input,
+  Link,
   Select,
   SelectItem,
   Switch,
@@ -256,7 +257,12 @@ function App() {
                       Calendar URL
                     </label>
                     <div className="flex flex-col gap-2 w-full">
-                      <Button color="primary" href={webCalUrl}>
+                      <Button
+                        color="primary"
+                        as={Link}
+                        href={webCalUrl}
+                        target="_blank"
+                      >
                         <Apple />
                         Subscribe to calendar
                       </Button>
@@ -294,7 +300,9 @@ function App() {
             <Button
               color="primary"
               variant="flat"
+              as={Link}
               href="https://paypal.me/memgod"
+              target="_blank"
               className="flex items-center gap-1"
             >
               <PiggyBank className="w-4 h-4 text-primary" />
