@@ -19,24 +19,21 @@ function decodeURL(url: string) {
         const decrypted = CryptoJS.AES.decrypt(encrypted, "13MONKELOVESBANANA37");
         //Uncompress
         const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split('&');
-        if (infosplit.length > 5) {
+        if (infosplit.length > 3) {
             let prot_Ver = infosplit[0];
-            if (prot_Ver == "2") {
+            if (infosplit.length > 5 && prot_Ver == "2") {
                 group = "Grupp " + infosplit[1];
                 modHeader = !!Number.parseInt(infosplit[2]);
                 modExam = !!Number.parseInt(infosplit[3]);
                 useRetro = !!Number.parseInt(infosplit[4]);
                 courses = infosplit.slice(3);
             } else {
-                return "Error: Invalid URL";
+                group = "Grupp " + infosplit[0];
+                modHeader = !!Number.parseInt(infosplit[1]);
+                modExam = !!Number.parseInt(infosplit[2]);
+                useRetro = false
+                courses = infosplit.slice(3);
             }
-        }
-        else if (infosplit.length > 3) {
-            group = "Grupp " + infosplit[0];
-            modHeader = !!Number.parseInt(infosplit[1]);
-            modExam = !!Number.parseInt(infosplit[2]);
-            useRetro = false
-            courses = infosplit.slice(3);
         } else
             return "Error: Invalid URL";
         iCal();
