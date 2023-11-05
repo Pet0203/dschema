@@ -26,7 +26,7 @@ function decodeURL(url: string) {
                 modHeader = !!Number.parseInt(infosplit[2]);
                 modExam = !!Number.parseInt(infosplit[3]);
                 useRetro = !!Number.parseInt(infosplit[4]);
-                courses = infosplit.slice(3);
+                courses = infosplit.slice(5);
             } else {
                 group = "Grupp " + infosplit[0];
                 modHeader = !!Number.parseInt(infosplit[1]);
