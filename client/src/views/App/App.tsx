@@ -56,6 +56,7 @@ function App() {
   const [selectedGroup, setSelectedGroup] = useState<Set<string>>(new Set());
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
+  const [checkedUseRetro, setCheckedUseRetro] = useState<boolean>(true);
   const [calendarUrl, setCalendarUrl] = useState<string>("");
 
   /**
@@ -64,18 +65,21 @@ function App() {
    * @param {string[]} courses  The selected courses
    * @param {boolean} location  State of location checkbox
    * @param {boolean} exam      State if exams checkbox
+   * @param {boolean} useRetro  State of showing passed events (up to two weeks) checkbox
    */
   async function getIcalLink(
     group: string,
     courses: string[],
     location: boolean,
-    exam: boolean
+    exam: boolean,
+    useRetro: boolean
   ) {
     if (group && courses && courses.length > 0) {
       const request = {
         group: group,
         modLocation: location,
         modExam: exam,
+        useRetro: useRetro,
         courses: courses.map((course) => course),
       };
 
@@ -115,9 +119,21 @@ function App() {
       ? selectedGroup.values().next().value
       : "A";
 
-    getIcalLink(group, theCources, checkedLocation, checkedExam);
+    getIcalLink(
+      group,
+      theCources,
+      checkedLocation,
+      checkedExam,
+      checkedUseRetro
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCourses, selectedGroup, checkedLocation, checkedExam]);
+  }, [
+    selectedCourses,
+    selectedGroup,
+    checkedLocation,
+    checkedExam,
+    checkedUseRetro,
+  ]);
 
   return (
     <div className="container p-4 mx-auto">
@@ -246,6 +262,12 @@ function App() {
                           onValueChange={setCheckedLocation}
                         >
                           Include exams and signups
+                        </Switch>
+                        <Switch
+                          isSelected={checkedUseRetro}
+                          onValueChange={setCheckedUseRetro}
+                        >
+                          Keep passed event (up to two weeks)
                         </Switch>
                       </div>
                     </div>
