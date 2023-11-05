@@ -20,7 +20,7 @@ function callTimeEdit() {
   https.get('https://cloud.timeedit.net/chalmers/web/public/ri6Y73XQZ65Zv1Q1Z05f70Y7554Yy4nQ6Q58.ics', (res) => {
 
     // Open file in local filesystem
-    const file = fs.createWriteStream(`TimeEdit.ics`);
+    const file = fs.createWriteStream(`./caches/TimeEdit.ics`);
 
     // Write data into local file
     res.pipe(file);
@@ -34,8 +34,26 @@ function callTimeEdit() {
   }).on("error", (err) => {
     console.log("TimeEdit cache error: ", err.message);
   });
+  //-2 weeks + 12 weeks
+  https.get('https://cloud.timeedit.net/chalmers/web/public/ri6Y73fQZ55ZY1Q1f55Y6W675X46y4Z5QQ78n.ics', (res) => {
+
+    // Open file in local filesystem
+    const file = fs.createWriteStream(`./caches/TimeEditRetro.ics`);
+
+    // Write data into local file
+    res.pipe(file);
+
+    // Close the file
+    file.on('finish', () => {
+      file.close();
+      console.log(`TimeEdit retro cache updated`);
+    });
+
+  }).on("error", (err) => {
+    console.log("TimeEdit cache error: ", err.message);
+  });
   //TODO: Implement a better system for scheduling downloads?
-  setTimeout(callTimeEdit, 2 * 3600 * 1000); //6h
+  setTimeout(callTimeEdit, 3600 * 1000); //1h
 }
 //Start loop
 callTimeEdit()
@@ -46,6 +64,8 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
   const group = req.body.group;
   // Boolean of whether to improve the location
   const modLocation = req.body.modLocation;
+  // Boolean of whether to use cached (passed) events (two previous weeks saved)
+  const useRetro = req.body.useRetro;
   // Boolean of whether to show exams in calendar
   const modExam = req.body.modExam;
   // Array of courses
@@ -57,14 +77,14 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
     '{"group":"2","modLocation":true,"modExam":false,"courses":["ke","fy"]}' becomes '2&1&0&ke&fy' after compression
     and then 'yCjNbnkI8ts2tBy7BoL0qw==' after AES-128 with our secret '13MONKELOVESBANANA37'
   */
-  let toEncrypt = group + "&" + (modLocation ? 1 : 0) + "&" + (modExam ? 1 : 0);
+  let toEncrypt = 2 + "&" + group + "&" + (modLocation ? 1 : 0) + "&" + (modExam ? 1 : 0) + "&" + (useRetro ? 1 : 0);
   for (const i in courses) {
     toEncrypt = toEncrypt.concat("&" + courses[i])
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
   //In dev:
   //const response = {url: req.get('Origin') + "/D_Schema-" + encrypted + ".ics"};
-  const response = { url: "https://dschema.panivia.com/D_Schema-" + encrypted + ".ics" };
+  const response = { url: "https://dschema.panivia.com/D_Schema-" + encrypted + ".ics" }; //TODO: Don't hardcode this
   res.send(JSON.stringify(response));
 });
 

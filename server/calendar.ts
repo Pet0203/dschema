@@ -4,6 +4,7 @@ const fs = require("fs");
 let comp = new ICAL.Component();
 let group: string;
 let modExam: boolean;
+let useRetro: boolean;
 let courses: Array<string>;
 let modHeader: boolean;
 let allCourses = ['EDA452', 'TDA555', 'TMV211', 'DAT044'];
@@ -19,10 +20,20 @@ function decodeURL(url: string) {
         //Uncompress
         const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split('&');
         if (infosplit.length > 3) {
-            group = "Grupp " + infosplit[0];
-            modHeader = !!Number.parseInt(infosplit[1]);
-            modExam = !!Number.parseInt(infosplit[2]);
-            courses = infosplit.slice(3);
+            let prot_Ver = infosplit[0];
+            if (infosplit.length > 5 && prot_Ver == "2") {
+                group = "Grupp " + infosplit[1];
+                modHeader = !!Number.parseInt(infosplit[2]);
+                modExam = !!Number.parseInt(infosplit[3]);
+                useRetro = !!Number.parseInt(infosplit[4]);
+                courses = infosplit.slice(3);
+            } else {
+                group = "Grupp " + infosplit[0];
+                modHeader = !!Number.parseInt(infosplit[1]);
+                modExam = !!Number.parseInt(infosplit[2]);
+                useRetro = false
+                courses = infosplit.slice(3);
+            }
         } else
             return "Error: Invalid URL";
         iCal();
@@ -52,7 +63,11 @@ function build() {
 }
 
 function iCal() {
-    const text = fs.readFileSync("./TimeEdit.ics", 'UTF-8');
+    let text;
+    if (useRetro)
+        text = fs.readFileSync("./caches/TimeEditRetro.ics", 'UTF-8');
+    else
+        text = fs.readFileSync("./caches/TimeEdit.ics", 'UTF-8');
     // Get the basic data out
     const jCalData = ICAL.parse(text);
     comp = new ICAL.Component(jCalData);
