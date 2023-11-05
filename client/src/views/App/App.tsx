@@ -252,14 +252,14 @@ function App() {
                       </label>
                       <div className="flex flex-col gap-2">
                         <Switch
-                          isSelected={checkedExam}
-                          onValueChange={setCheckedExam}
+                          isSelected={checkedLocation}
+                          onValueChange={setCheckedLocation}
                         >
                           Improved titles
                         </Switch>
                         <Switch
-                          isSelected={checkedLocation}
-                          onValueChange={setCheckedLocation}
+                          isSelected={checkedExam}
+                          onValueChange={setCheckedExam}
                         >
                           Include exams and signups
                         </Switch>
