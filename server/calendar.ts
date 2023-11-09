@@ -163,6 +163,8 @@ function modHeaders() {
                     vevent.removeProperty(vevent.getFirstProperty('description'));
                     vevent.getFirstProperty('summary').setValue(vevent.getFirstProperty('summary').getFirstValue() + '|' + activity);
                 }
+                if (desc.match('Reserv'))
+                    vevent.getFirstProperty('summary').setValue(vevent.getFirstProperty('summary').getFirstValue() + ' (Reserv)');
             }
         }
 
