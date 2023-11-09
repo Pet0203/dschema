@@ -137,9 +137,9 @@ function getCourseName(course: string) {
         case 'EDA452':
             return 'GruDat';
         case 'TDA555':
-            return 'Funk Prog';
+            return 'Haskell';
         case 'TMV211':
-            return 'Diskmat';
+            return 'Diskmatte';
         case 'DAT044':
             return 'OOP';
         default:
