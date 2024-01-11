@@ -60,8 +60,6 @@ callTimeEdit()
 
 app.post('/api/v1/getUrl/', (req: any, res: any) => {
   // Object with below properties
-  // String of group
-  const group = req.body.group;
   // Boolean of whether to improve the location
   const modLocation = req.body.modLocation;
   // Boolean of whether to use cached (passed) events (two previous weeks saved)
@@ -77,9 +75,9 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
     '{"group":"2","modLocation":true,"modExam":false,"courses":["ke","fy"]}' becomes '2&1&0&ke&fy' after compression
     and then 'yCjNbnkI8ts2tBy7BoL0qw==' after AES-128 with our secret '13MONKELOVESBANANA37'
   */
-  let toEncrypt = 2 + "&" + group + "&" + (modLocation ? 1 : 0) + "&" + (modExam ? 1 : 0) + "&" + (useRetro ? 1 : 0);
+  let toEncrypt = 3 + "&" + (modLocation ? 1 : 0) + "&" + (modExam ? 1 : 0) + "&" + (useRetro ? 1 : 0);
   for (const i in courses) {
-    toEncrypt = toEncrypt.concat("&" + courses[i])
+    toEncrypt = toEncrypt.concat("&" + courses[i].course + "&" + courses[i].group)
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
   //In dev:

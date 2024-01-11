@@ -5,9 +5,9 @@ let comp = new ICAL.Component();
 let group: string;
 let modExam: boolean;
 let useRetro: boolean;
-let courses: Array<string>;
+let courses: Map<string, number>;
 let modHeader: boolean;
-let allCourses = ['EDA452', 'TDA555', 'TMV211', 'DAT044'];
+let allCourses = ['EDA452', 'TDA555', 'TMV211', 'DAT044', 'DAT017', 'TMV216', 'EDA343', 'TMV170'];
 
 module.exports.decodeURL = decodeURL;
 
@@ -21,7 +21,16 @@ function decodeURL(url: string) {
         const infosplit = decrypted.toString(CryptoJS.enc.Utf8).split('&');
         if (infosplit.length > 3) {
             let prot_Ver = infosplit[0];
-            if (infosplit.length > 5 && prot_Ver == "2") {
+            if (infosplit.length > 4 && prot_Ver == "3") {
+                modHeader = !!Number.parseInt(infosplit[1]);
+                modExam = !!Number.parseInt(infosplit[2]);
+                useRetro = !!Number.parseInt(infosplit[3]);
+                let courGroups = infosplit.slice(4);
+                for (let i = 0; i < courGroups.length; i += 2) {
+                    courses.set(courGroups[i], Number.parseInt(courGroups[i + 1]))
+                }
+            }
+            else if (infosplit.length > 5 && prot_Ver == "2") {
                 group = "Grupp " + infosplit[1];
                 modHeader = !!Number.parseInt(infosplit[2]);
                 modExam = !!Number.parseInt(infosplit[3]);
@@ -49,7 +58,7 @@ function build() {
         return comp;
     }
     let toRemove = allCourses.filter(function (value) {
-        return !courses.includes(value);
+        return !courses.has(value);
     });
     toRemove.forEach(function (course) {
         getCourse(course).forEach(obj => {
@@ -104,7 +113,8 @@ function rebuild() {
     const newComp = new ICAL.Component(ICAL.parse(comp.toString()));
     newComp.removeAllSubcomponents('vevent');
 
-    courses.forEach(function (course) {
+    //Do this below for each course (key)
+    courses.forEach((value, course) => {
         getCourse(course).forEach(obj => {
             newComp.addSubcomponent(obj)
         })
@@ -142,6 +152,14 @@ function getCourseName(course: string) {
             return 'Diskmat';
         case 'DAT044':
             return 'OOP';
+        case 'DAT017':
+            return 'MOP';
+        case 'TMV216':
+            return 'LinAlg';
+        case 'EDA343':
+            return 'CompCom';
+        case 'TMV170':
+            return 'Calculus';
         default:
             return course;
     }
