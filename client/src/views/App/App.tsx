@@ -31,9 +31,19 @@ function App() {
     },
     { label: "Intro till OOP", value: "DAT044", description: "lp2" },
     { label: "Grundläggande datorteknik", value: "EDA452", description: "lp2" },
+    {
+      label: "Maskinorienterad programmering",
+      value: "DAT017",
+      description: "lp3",
+    },
+    {
+      label: "Linjär algebra",
+      value: "TMV216",
+      description: "lp3",
+    },
   ];
 
-  const groups = [
+  const grudatGroups = [
     { value: "A", label: "Group A" },
     { value: "B", label: "Group B" },
     { value: "C", label: "Group C" },
@@ -41,6 +51,24 @@ function App() {
     { value: "E", label: "Group E" },
     { value: "F", label: "Group F" },
     { value: "G", label: "Group G" },
+  ];
+  // const linalgGroups
+  var linalgGroups: any = [];
+
+  for (let i = 1; i <= 87; i++) {
+    linalgGroups.push({ value: i.toString(), label: "Group " + i.toString() });
+  }
+
+  const mopGroups = [
+    { value: "A", label: "Group A" },
+    { value: "B", label: "Group B" },
+    { value: "C", label: "Group C" },
+    { value: "D", label: "Group D" },
+    { value: "E", label: "Group E" },
+    { value: "F", label: "Group F" },
+    { value: "G", label: "Group G" },
+    { value: "H", label: "Group H" },
+    { value: "I", label: "Group I" },
   ];
 
   /**
@@ -53,7 +81,15 @@ function App() {
       }),
     ])
   );
-  const [selectedGroup, setSelectedGroup] = useState<Set<string>>(new Set());
+  const [selectedGrudatGroup, setSelectedGrudatGroup] = useState<Set<string>>(
+    new Set()
+  );
+  const [selecteMopGroup, setSelectedMopGroup] = useState<Set<string>>(
+    new Set()
+  );
+  const [selectedLinalgGroup, setSelectedLinalgGroup] = useState<Set<string>>(
+    new Set()
+  );
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
   const [checkedUseRetro, setCheckedUseRetro] = useState<boolean>(true);
@@ -68,7 +104,7 @@ function App() {
    * @param {boolean} useRetro  State of showing passed events (up to two weeks) checkbox
    */
   async function getIcalLink(
-    group: string,
+    group: any,
     courses: string[],
     location: boolean,
     exam: boolean,
@@ -76,7 +112,7 @@ function App() {
   ) {
     if (group && courses && courses.length > 0) {
       const request = {
-        group: group,
+        group: group.length > 0 ? group : [],
         modLocation: location,
         modExam: exam,
         useRetro: useRetro,
@@ -115,12 +151,27 @@ function App() {
   useEffect(() => {
     const theCources = Array.from(selectedCourses);
 
-    const group = selectedCourses.has("EDA452")
-      ? selectedGroup.values().next().value
-      : "A";
+    const grudatGroup = selectedGrudatGroup.values().next().value;
+    const linalgGroup = selectedLinalgGroup.values().next().value;
+    const mopGroup = selecteMopGroup.values().next().value;
+
+    const groups = [];
+
+    if (typeof grudatGroup === "string") {
+      groups.push({ course: "EDA452", group: grudatGroup });
+    }
+
+    if (typeof linalgGroup === "string") {
+      groups.push({ course: "TMV216", group: linalgGroup });
+    }
+
+    if (typeof mopGroup === "string") {
+      groups.push({ course: "DAT017", group: mopGroup });
+    }
+    console.log(groups);
 
     getIcalLink(
-      group,
+      groups,
       theCources,
       checkedLocation,
       checkedExam,
@@ -129,7 +180,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedCourses,
-    selectedGroup,
+    selectedGrudatGroup,
+    selectedLinalgGroup,
+    selecteMopGroup,
     checkedLocation,
     checkedExam,
     checkedUseRetro,
@@ -201,25 +254,26 @@ function App() {
               <Select
                 label="Select GruDat lab group"
                 placeholder="Select group"
-                selectedKeys={selectedGroup}
+                selectedKeys={selectedGrudatGroup}
                 variant="bordered"
                 labelPlacement="outside"
                 isMultiline
-                onSelectionChange={setSelectedGroup as any}
+                onSelectionChange={setSelectedGrudatGroup as any}
                 classNames={{
                   trigger: "min-h-unit-12 py-2",
                 }}
                 renderValue={() => {
                   return (
                     <div className="flex flex-wrap gap-2">
-                      {Array.from(selectedGroup).map((selectedItem) => (
+                      {Array.from(selectedGrudatGroup).map((selectedItem) => (
                         <Chip
                           key={selectedItem}
                           className="bg-primary text-primary-foreground"
                         >
                           {
-                            groups.find((group) => group.value === selectedItem)
-                              ?.label
+                            grudatGroups.find(
+                              (group) => group.value === selectedItem
+                            )?.label
                           }
                         </Chip>
                       ))}
@@ -227,7 +281,100 @@ function App() {
                   );
                 }}
               >
-                {groups.map((group) => (
+                {grudatGroups.map((group) => (
+                  <SelectItem key={group.value} textValue={group.label}>
+                    <div className="flex gap-2 items-center">
+                      <div className="flex flex-col">
+                        <span className="text-small font-bold">
+                          {group.label}
+                        </span>
+                      </div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
+            {selectedCourses.has("TMV216") && (
+              <Select
+                label="Select LinAlg group"
+                placeholder="Select group"
+                selectedKeys={selectedLinalgGroup}
+                variant="bordered"
+                labelPlacement="outside"
+                isMultiline
+                onSelectionChange={setSelectedLinalgGroup as any}
+                classNames={{
+                  trigger: "min-h-unit-12 py-2",
+                }}
+                renderValue={() => {
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from(selectedLinalgGroup).map((selectedItem) => (
+                        <Chip
+                          key={selectedItem}
+                          className="bg-primary text-primary-foreground"
+                        >
+                          {
+                            linalgGroups.find(
+                              (group: { label: string; value: string }) =>
+                                group.value === selectedItem
+                            )?.label
+                          }
+                        </Chip>
+                      ))}
+                    </div>
+                  );
+                }}
+              >
+                {
+                  // Create a for loop to add groups 1-87
+                }
+
+                {linalgGroups.map((group: { label: string; value: string }) => (
+                  <SelectItem key={group.value} textValue={group.label}>
+                    <div className="flex gap-2 items-center">
+                      <div className="flex flex-col">
+                        <span className="text-small font-bold">
+                          {group.label}
+                        </span>
+                      </div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
+            {selectedCourses.has("DAT017") && (
+              <Select
+                label="Select Mop group"
+                placeholder="Select group"
+                selectedKeys={selecteMopGroup}
+                variant="bordered"
+                labelPlacement="outside"
+                isMultiline
+                onSelectionChange={setSelectedMopGroup as any}
+                classNames={{
+                  trigger: "min-h-unit-12 py-2",
+                }}
+                renderValue={() => {
+                  return (
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from(selecteMopGroup).map((selectedItem) => (
+                        <Chip
+                          key={selectedItem}
+                          className="bg-primary text-primary-foreground"
+                        >
+                          {
+                            mopGroups.find(
+                              (group) => group.value === selectedItem
+                            )?.label
+                          }
+                        </Chip>
+                      ))}
+                    </div>
+                  );
+                }}
+              >
+                {mopGroups.map((group) => (
                   <SelectItem key={group.value} textValue={group.label}>
                     <div className="flex gap-2 items-center">
                       <div className="flex flex-col">
@@ -242,7 +389,8 @@ function App() {
             )}
             {
               // If the user has selected EDA452, show options only if the user has selected a group, but if the user has not selected EDA452, show the options
-              ((selectedCourses.has("EDA452") && selectedGroup.size > 0) ||
+              ((selectedCourses.has("EDA452") &&
+                selectedGrudatGroup.size > 0) ||
                 !selectedCourses.has("EDA452")) &&
                 selectedCourses.size > 0 && (
                   <>
