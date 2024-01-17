@@ -47,7 +47,7 @@ function build() {
         return comp;
     }
     let toRemove = allCourses.filter(function (value) {
-        return !courses[value];
+        return courses[value] == null;
     });
     toRemove.forEach(function (course) {
         getCourse(course).forEach(obj => {
