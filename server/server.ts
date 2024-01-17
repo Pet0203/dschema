@@ -81,7 +81,7 @@ app.post('/api/v1/getUrl/', (req: any, res: any) => {
   }
   const encrypted = CryptoJS.AES.encrypt(toEncrypt, "13MONKELOVESBANANA37");
   //In dev:
-  //const response = {url: req.get('Origin') + "/D_Schema-" + encrypted + ".ics"};
+  //const response = {url: "http://localhost:3001" + "/D_Schema-" + encrypted + ".ics"};
   const response = { url: "https://dschema.panivia.com/D_Schema-" + encrypted + ".ics" }; //TODO: Don't hardcode this
   res.send(JSON.stringify(response));
 });

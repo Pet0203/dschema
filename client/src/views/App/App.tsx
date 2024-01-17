@@ -52,12 +52,6 @@ function App() {
     { value: "F", label: "Group F" },
     { value: "G", label: "Group G" },
   ];
-  // const linalgGroups
-  var linalgGroups: any = [];
-
-  for (let i = 1; i <= 87; i++) {
-    linalgGroups.push({ value: i.toString(), label: "Group " + i.toString() });
-  }
 
   const mopGroups = [
     { value: "A", label: "Group A" },
@@ -87,9 +81,6 @@ function App() {
   const [selecteMopGroup, setSelectedMopGroup] = useState<Set<string>>(
     new Set()
   );
-  const [selectedLinalgGroup, setSelectedLinalgGroup] = useState<Set<string>>(
-    new Set()
-  );
   const [checkedLocation, setCheckedLocation] = useState<boolean>(true);
   const [checkedExam, setCheckedExam] = useState<boolean>(true);
   const [checkedUseRetro, setCheckedUseRetro] = useState<boolean>(true);
@@ -104,19 +95,16 @@ function App() {
    * @param {boolean} useRetro  State of showing passed events (up to two weeks) checkbox
    */
   async function getIcalLink(
-    group: any,
-    courses: string[],
+    courses: any,
     location: boolean,
     exam: boolean,
     useRetro: boolean
   ) {
-    if (group && courses && courses.length > 0) {
       const request = {
-        group: group.length > 0 ? group : [],
         modLocation: location,
         modExam: exam,
         useRetro: useRetro,
-        courses: courses.map((course) => course),
+        courses: courses ? courses : [],
       };
 
       fetch("/api/v1/getUrl/", {
@@ -129,7 +117,6 @@ function App() {
         .then((response) => response.json())
         // This will later replace the setUrlInput above
         .then((json) => setCalendarUrl(json.url));
-    }
   }
 
   /**
@@ -152,27 +139,25 @@ function App() {
     const theCources = Array.from(selectedCourses);
 
     const grudatGroup = selectedGrudatGroup.values().next().value;
-    const linalgGroup = selectedLinalgGroup.values().next().value;
     const mopGroup = selecteMopGroup.values().next().value;
 
     const groups = [];
 
-    if (typeof grudatGroup === "string") {
-      groups.push({ course: "EDA452", group: grudatGroup });
+    //Loop through all elements in theCourses, if they have a group, push a new course + group object onto groups, else just push the course name.
+    for (let i = 0; i < theCources.length; i++) {
+      if (theCources[i] === "EDA452") {
+        groups.push({ course: theCources[i], group: grudatGroup});
+      } else if (theCources[i] === "DAT017") {
+        groups.push({ course: theCources[i], group: mopGroup});
+      } else {
+        groups.push({course: theCources[i], group: -1});
+      }
     }
 
-    if (typeof linalgGroup === "string") {
-      groups.push({ course: "TMV216", group: linalgGroup });
-    }
-
-    if (typeof mopGroup === "string") {
-      groups.push({ course: "DAT017", group: mopGroup });
-    }
     console.log(groups);
 
     getIcalLink(
       groups,
-      theCources,
       checkedLocation,
       checkedExam,
       checkedUseRetro
@@ -181,7 +166,6 @@ function App() {
   }, [
     selectedCourses,
     selectedGrudatGroup,
-    selectedLinalgGroup,
     selecteMopGroup,
     checkedLocation,
     checkedExam,
@@ -294,55 +278,6 @@ function App() {
                 ))}
               </Select>
             )}
-            {selectedCourses.has("TMV216") && (
-              <Select
-                label="Select LinAlg group"
-                placeholder="Select group"
-                selectedKeys={selectedLinalgGroup}
-                variant="bordered"
-                labelPlacement="outside"
-                isMultiline
-                onSelectionChange={setSelectedLinalgGroup as any}
-                classNames={{
-                  trigger: "min-h-unit-12 py-2",
-                }}
-                renderValue={() => {
-                  return (
-                    <div className="flex flex-wrap gap-2">
-                      {Array.from(selectedLinalgGroup).map((selectedItem) => (
-                        <Chip
-                          key={selectedItem}
-                          className="bg-primary text-primary-foreground"
-                        >
-                          {
-                            linalgGroups.find(
-                              (group: { label: string; value: string }) =>
-                                group.value === selectedItem
-                            )?.label
-                          }
-                        </Chip>
-                      ))}
-                    </div>
-                  );
-                }}
-              >
-                {
-                  // Create a for loop to add groups 1-87
-                }
-
-                {linalgGroups.map((group: { label: string; value: string }) => (
-                  <SelectItem key={group.value} textValue={group.label}>
-                    <div className="flex gap-2 items-center">
-                      <div className="flex flex-col">
-                        <span className="text-small font-bold">
-                          {group.label}
-                        </span>
-                      </div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </Select>
-            )}
             {selectedCourses.has("DAT017") && (
               <Select
                 label="Select Mop group"
@@ -389,10 +324,9 @@ function App() {
             )}
             {
               // If the user has selected EDA452, show options only if the user has selected a group, but if the user has not selected EDA452, show the options
-              ((selectedCourses.has("EDA452") &&
-                selectedGrudatGroup.size > 0) ||
-                !selectedCourses.has("EDA452")) &&
-                selectedCourses.size > 0 && (
+              ((selectedCourses.has("EDA452") && selectedGrudatGroup.size > 0) || !selectedCourses.has("EDA452")) &&
+              ((selectedCourses.has("DAT017") && selecteMopGroup.size > 0) || !selectedCourses.has("DAT017"))
+                && (
                   <>
                     <div className="group relative flex flex-col w-full transition-background motion-reduce:transition-none !duration-150">
                       <label className="block text-small font-medium pointer-events-none text-foreground pb-1.5 will-change-auto origin-top-left transition-all !duration-200 !ease-out motion-reduce:transition-none">

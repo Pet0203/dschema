@@ -2,10 +2,13 @@ const ICAL = require('ical.js');
 const CryptoJS = require("crypto-js");
 const fs = require("fs");
 let comp = new ICAL.Component();
-let group: string;
 let modExam: boolean;
 let useRetro: boolean;
-let courses: Map<string, number>;
+type MapType = { 
+    [id: string]: string; 
+}
+
+const courses: MapType = {};
 let modHeader: boolean;
 let allCourses = ['EDA452', 'TDA555', 'TMV211', 'DAT044', 'DAT017', 'TMV216', 'EDA343', 'TMV170'];
 
@@ -27,26 +30,12 @@ function decodeURL(url: string) {
                 useRetro = !!Number.parseInt(infosplit[3]);
                 let courGroups = infosplit.slice(4);
                 for (let i = 0; i < courGroups.length; i += 2) {
-                    courses.set(courGroups[i], Number.parseInt(courGroups[i + 1]))
+                    courses[courGroups[i]] = courGroups[i + 1]};
                 }
-            }
-            else if (infosplit.length > 5 && prot_Ver == "2") {
-                group = "Grupp " + infosplit[1];
-                modHeader = !!Number.parseInt(infosplit[2]);
-                modExam = !!Number.parseInt(infosplit[3]);
-                useRetro = !!Number.parseInt(infosplit[4]);
-                courses = infosplit.slice(5);
-            } else {
-                group = "Grupp " + infosplit[0];
-                modHeader = !!Number.parseInt(infosplit[1]);
-                modExam = !!Number.parseInt(infosplit[2]);
-                useRetro = false
-                courses = infosplit.slice(3);
-            }
         } else
             return "Error: Invalid URL";
         iCal();
-        buildForGroup({ group: group });
+        buildForGroup();
         return build().toString();
     }
     return "Error: Invalid URL";
@@ -58,7 +47,7 @@ function build() {
         return comp;
     }
     let toRemove = allCourses.filter(function (value) {
-        return !courses.has(value);
+        return !courses[value];
     });
     toRemove.forEach(function (course) {
         getCourse(course).forEach(obj => {
@@ -83,11 +72,14 @@ function iCal() {
 }
 
 //Filters out events not relevant to selected group
-function buildForGroup({ group }: { group: string }) {
+function buildForGroup() {
     // @ts-ignore
-    const groupChar = group.charAt(group.length - 1);
     comp.getAllSubcomponents('vevent').forEach((vevent: any) => {
+        if (courses['EDA452'] && vevent.getFirstProperty('summary') != null && vevent.getFirstProperty('summary').getFirstValue().includes('EDA452')) {
         if (vevent.getFirstProperty('description') != null) {
+            const groupChar = courses['EDA452'].charAt(0);
+            if (groupChar === '-')
+                return;
             var desc = vevent.getFirstProperty('description').getFirstValue();
             let groupComponent = desc.match(/Grupp ([A-G]) och ([A-G])/);
             if (groupComponent != null && groupComponent.length == 3) {
@@ -104,6 +96,21 @@ function buildForGroup({ group }: { group: string }) {
             }
         }
     }
+    if (courses['DAT017'] && vevent.getFirstProperty('summary') != null && vevent.getFirstProperty('summary').getFirstValue().includes('DAT017')) {
+        if (vevent.getFirstProperty('description') != null) {
+            const groupChar = courses['DAT017'].charAt(0);
+            if (groupChar === '-')
+                return;
+            var desc = vevent.getFirstProperty('description').getFirstValue();
+            let matches = desc.match(/Grupp ((?:[A-I](?:, )?)+)/);
+            if (matches != null && matches.length > 1) {
+                let groupComponent = matches[1].split(', ');
+                if (!groupComponent.includes(groupChar))
+                    comp.removeSubcomponent(vevent);
+            }
+        }
+    }
+    }
     );
 
 }
@@ -112,14 +119,11 @@ function buildForGroup({ group }: { group: string }) {
 function rebuild() {
     const newComp = new ICAL.Component(ICAL.parse(comp.toString()));
     newComp.removeAllSubcomponents('vevent');
-
-    //Do this below for each course (key)
-    courses.forEach((value, course) => {
+    for (const course in courses) {
         getCourse(course).forEach(obj => {
             newComp.addSubcomponent(obj)
-        })
-    });
-
+        });
+    }
     comp = newComp;
 
     if (modHeader)
@@ -172,7 +176,6 @@ function modHeaders() {
             const sum = vevent.getFirstProperty('summary').getFirstValue();
             if (allCourses.some(r => sum.includes(r)))
                 vevent.getFirstProperty('summary').setValue(getCourseName(allCourses.find(r => sum.includes(r)) || ''));
-            //If it also contains a description, we need to check for a certain regex match, if there are any, remove the description and add the match onto the summary.
             if (vevent.getFirstProperty('description') != null) {
                 const desc = vevent.getFirstProperty('description').getFirstValue();
                 const matches = desc.match(/Aktivitet: ([^\\]+)\n/);
